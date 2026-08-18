@@ -84,7 +84,7 @@ function loginType(t){adminTab.classList.toggle("on",t==="admin");customerTab.cl
 function login(){let u=loginName.value.trim(),p=loginPass.value.trim();if(u==="admin"&&p==="1234"){sessionStorage.setItem("logged","1");go("home")}else if(u&&p){sessionStorage.setItem("logged","1");go("home")}else alert("Login details enter madi")}
 function logout(){sessionStorage.removeItem("logged");go("login")}
 function render(){
-  let h=list.map(x=>`<div class="svc" onclick='window.location.href=portals[${JSON.stringify(x[1])}]' style="cursor:pointer;">
+let h=list.map(x=>`<div class="svc" onclick='openService(${JSON.stringify(x[1])})' style="cursor:pointer;">
 function pricesBox(){pricesDiv=document.getElementById("prices");pricesDiv.innerHTML=list.map(x=>`<div style="display:flex;gap:7px;align-items:center;margin:5px 0"><span style="width:45%;font-size:12px">${x[0]} ${x[1]}</span><input id="p_${x[1]}" type="number" value="${prices[x[1]]}" placeholder="₹"></div>`).join("")}
 function savePrices(){list.forEach(x=>prices[x[1]]=+(document.getElementById("p_"+x[1]).value||0));alert("Service prices saved");}
 function saveService(){let n=cname.value.trim(),p=phone.value.trim(),sv=service.value,a=+amount.value;if(!n||!p||!a){alert("Customer name, mobile and amount enter madi");return}customers.add(p);sales+=a;history.unshift({name:n+" • "+p,service:sv,amount:a,type:"minus"});cname.value="";phone.value="";amount.value="";sync();alert("Service saved successfully")}
