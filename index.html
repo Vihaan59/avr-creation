@@ -5,120 +5,158 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Raghu Cyber Centre</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#17233d;font-family:Arial,sans-serif}
-header{background:linear-gradient(135deg,#064b87,#0b6fb8);color:#fff;padding:18px 14px;position:sticky;top:0;z-index:5}
-.brand{font-size:22px;font-weight:800}.small{margin-top:5px;opacity:.9}.search{width:100%;margin-top:14px;padding:14px;border:0;border-radius:14px;font-size:16px}
-nav{display:flex;gap:8px;overflow:auto;margin-top:12px}nav button{white-space:nowrap;border:0;border-radius:12px;padding:12px 18px;font-size:15px}
-main{max-width:900px;margin:auto;padding:14px}.page{display:none}.page.active{display:block}
-.card{background:#fff;border-radius:18px;padding:20px;margin:12px 0;box-shadow:0 5px 20px #dce4ef}
-h2{margin-top:0}.muted{color:#748094}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.svc{background:#fff;border-radius:16px;padding:18px 10px;text-align:center;box-shadow:0 4px 15px #dce4ef;cursor:pointer}
-.svc b{display:block;font-size:16px}.svc span{display:block;color:#00a878;margin-top:8px;font-weight:700}
-input{width:100%;padding:14px;margin:7px 0;border:1px solid #d5dce7;border-radius:12px;font-size:16px}
-.btn{width:100%;padding:14px;border:0;border-radius:12px;background:#087fd1;color:#fff;font-size:16px;font-weight:700;margin-top:8px}
-.green{background:#00b86b}.danger{background:#e74c3c}.link{background:none;color:#087fd1;border:0;padding:10px;font-size:15px}
-@media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)}.svc{padding:15px 6px}}
-footer{text-align:center;color:#7d889a;padding:25px}
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#182238;font-family:Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid #e8edf4;padding:14px 16px;position:sticky;top:0;z-index:10}
+.top{display:flex;align-items:center;gap:12px}.menu{font-size:25px}.brand{font-size:19px;font-weight:800}.brand span{color:#00a878}.role{font-size:12px;color:#6f7b8f}
+nav{display:flex;gap:8px;overflow:auto;margin-top:12px}nav button{border:1px solid #dce4ee;background:#fff;border-radius:10px;padding:9px 14px;white-space:nowrap}
+main{max-width:1000px;margin:auto;padding:14px}.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(135deg,#eef8ff,#fff);border-radius:20px;padding:24px;margin-bottom:14px}
+.card{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 4px 18px #dfe6ef}
+h2{margin:4px 0 8px}.muted{color:#758196}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tile{background:#fff;border:1px solid #e8edf4;border-radius:15px;padding:15px 8px;text-align:center;box-shadow:0 3px 12px #e8edf4}
+.tile .icon{font-size:27px}.tile b{display:block;margin-top:7px;font-size:14px}.tile small{display:block;color:#00a878;margin-top:5px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stat{background:#fff;border-radius:18px;padding:18px;box-shadow:0 4px 18px #dfe6ef}.amount{font-size:25px;font-weight:800;margin-top:8px}
+.btn{border:0;border-radius:12px;padding:13px 18px;background:#087fd1;color:#fff;font-weight:700;font-size:15px}.green{background:#09b66b}.red{background:#e94b4b}.full{width:100%}
+input{width:100%;padding:14px;margin:7px 0;border:1px solid #d7dfe9;border-radius:12px;font-size:16px}
+.loginbox{max-width:520px;margin:25px auto}.switch{display:flex;gap:8px}.switch button{flex:1}.link{background:none;color:#087fd1;border:0;padding:10px}
+footer{text-align:center;color:#7c8798;padding:28px}
+@media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr)}.brand{font-size:17px}.stats{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+
 <header>
-<div class="brand">🟢 RAGHU CYBER CENTRE</div>
-<div class="small">ಎಲ್ಲಾ ಡಿಜಿಟಲ್ ಸೇವೆಗಳು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ</div>
-<input id="search" class="search" placeholder="🔎 ಸೇವೆ ಹುಡುಕಿ..." oninput="filterServices()">
-<nav>
+<div class="top">
+<div class="menu">☰</div>
+<div style="flex:1"><div class="brand">🟢 RAGHU <span>CYBER CENTRE</span></div><div class="role" id="roleText">All Digital Services One Place</div></div>
+<div id="userName" class="role"></div>
+</div>
+<nav id="nav">
 <button onclick="go('home')">🏠 Home</button>
-<button onclick="go('login')">🔐 Login</button>
-<button onclick="go('register')">👤 Customer Register</button>
-<button onclick="go('services')">🧰 Services</button>
+<button id="loginNav" onclick="go('login')">🔐 Login</button>
+<button id="regNav" onclick="go('register')">👤 Customer Register</button>
+<button id="logoutNav" style="display:none" onclick="logout()">🚪 Logout</button>
 </nav>
 </header>
 
 <main>
 <section id="home" class="page active">
-<div class="card"><h2>ಸ್ವಾಗತ 🙏</h2><p class="muted">Raghu Cyber Centre — ಎಲ್ಲಾ ಆನ್‌ಲೈನ್ ಸೇವೆಗಳು ಇಲ್ಲಿ.</p>
-<button class="btn" onclick="go('services')">ಸೇವೆಗಳು ನೋಡಿ</button></div>
+<div class="hero">
+<h2>🙏 ಸ್ವಾಗತ</h2>
+<p class="muted">Raghu Cyber Centre — ಎಲ್ಲಾ ಡಿಜಿಟಲ್ ಸೇವೆಗಳು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ.</p>
+<div id="guestBox">
+<button class="btn" onclick="go('login')">🔐 Login ಮಾಡಿ</button>
+<button class="btn green" onclick="go('register')">👤 Customer Account Create ಮಾಡಿ</button>
+</div>
+</div>
+<div class="card">
+<h3>✨ ನಮ್ಮಲ್ಲಿ ಏನು ಸಿಗುತ್ತದೆ?</h3>
+<p class="muted">Customer login ಮಾಡಿದ ನಂತರ ಮಾತ್ರ Services, Wallet, Add Money ಮತ್ತು Customer dashboard ಕಾಣಿಸುತ್ತದೆ.</p>
+</div>
 </section>
 
 <section id="login" class="page">
-<div class="card">
-<h2>🔐 Login</h2><p class="muted">Customer ಅಥವಾ Admin login</p>
-<div class="grid">
-<button class="btn" id="adminTab" onclick="setType('admin')">Admin</button>
-<button class="btn" style="background:#dfe8f5;color:#111" id="customerTab" onclick="setType('customer')">Customer</button>
-</div>
+<div class="card loginbox">
+<h2>🔐 Login</h2><p class="muted">ನಿಮ್ಮ account ಬಳಸಿ login ಮಾಡಿ</p>
+<div class="switch"><button class="btn" id="adminBtn" onclick="setType('admin')">Admin</button><button class="btn" id="customerBtn" style="background:#e3ebf6;color:#111" onclick="setType('customer')">Customer</button></div>
 <input id="loginId" placeholder="Email / Mobile / Username">
-<input id="loginPass" type="password" placeholder="Password">
-<button class="btn" onclick="login()">Login</button>
-<p class="muted">Demo Admin: <b>admin</b> / <b>1234</b></p>
+<input id="loginPass" type="password" placeholder="Password / PIN">
+<button class="btn full" onclick="login()">Login</button>
+<p class="muted" id="demo">Demo Admin: <b>admin / 1234</b></p>
 <button class="link" onclick="go('register')">ಹೊಸ Customer Account Create ಮಾಡಿ</button>
 </div>
 </section>
 
 <section id="register" class="page">
-<div class="card">
+<div class="card loginbox">
 <h2>👤 Customer Account Create</h2>
 <input id="regName" placeholder="ಹೆಸರು">
 <input id="regEmail" type="email" placeholder="Email">
 <input id="regMobile" type="tel" placeholder="Mobile Number">
 <input id="regPass" type="password" placeholder="Password">
 <input id="regConfirm" type="password" placeholder="Confirm Password">
-<button class="btn green" onclick="register()">Create Account</button>
+<button class="btn green full" onclick="register()">Create Account</button>
 <button class="link" onclick="go('login')">Already Account? Login</button>
 </div>
 </section>
 
+<section id="dashboard" class="page">
+<div class="hero">
+<h2>👋 Welcome, <span id="dashName">Customer</span></h2>
+<p class="muted">ನಿಮ್ಮ Customer Dashboard</p>
+</div>
+<div class="stats">
+<div class="stat"><div class="muted">💳 Wallet Balance</div><div class="amount">₹ <span id="wallet">0.00</span></div><button class="btn green" style="margin-top:12px" onclick="go('walletPage')">＋ Add Money</button></div>
+<div class="stat"><div class="muted">📊 Transactions</div><div class="amount"><span id="transactions">0</span></div></div>
+</div>
+<div class="card"><h3>🧰 Services</h3><p class="muted">Login ಆದ ನಂತರ ಮಾತ್ರ ಕೆಳಗಿನ services ಕಾಣಿಸುತ್ತವೆ.</p><button class="btn" onclick="go('services')">ಎಲ್ಲಾ Services ತೆರೆಯಿರಿ →</button></div>
+</section>
+
 <section id="services" class="page">
-<div class="card"><h2>🧰 ಎಲ್ಲಾ ಸೇವೆಗಳು</h2><p class="muted">ಸೇವೆಯ ಮೇಲೆ tap ಮಾಡಿದರೆ official website direct open ಆಗುತ್ತದೆ.</p></div>
+<div class="card"><h2>🧰 ಎಲ್ಲಾ Services</h2><input id="search" placeholder="🔎 Service ಹುಡುಕಿ..." oninput="renderServices()"></div>
 <div id="serviceGrid" class="grid"></div>
 </section>
-</main>
 
-<footer>© 2026 Raghu Cyber Centre</footer>
+<section id="walletPage" class="page">
+<div class="card">
+<h2>💰 Wallet / Add Money</h2><p class="muted">Walletಗೆ amount add ಮಾಡಿ.</p>
+<input id="addAmount" type="number" min="1" placeholder="Amount ₹">
+<button class="btn green full" onclick="addMoney()">Add Money</button>
+<div class="card" style="margin-top:18px;background:#f7fbff"><b>Current Balance: ₹ <span id="wallet2">0.00</span></b></div>
+</div>
+</section>
+</main>
+<footer>© 2026 Raghu Cyber Centre. All rights reserved.</footer>
 
 <script>
 const portals={
-"Aadhaar":"https://myaadhaar.uidai.gov.in/",
-"PAN Card":"https://www.incometax.gov.in/iec/foportal/",
-"Voter ID":"https://voters.eci.gov.in/",
-"Ration Card":"https://ahara.kar.nic.in/",
-"Vehicle RC":"https://vahan.parivahan.gov.in/vahanservice/vahan/ui/statevalidation/homepage.xhtml",
-"Certificates":"https://www.india.gov.in/",
-"Online Form":"https://www.india.gov.in/",
-"Bill Payment":"https://www.bharatbillpay.com/",
-"Electricity Bill":"https://www.bharatbillpay.com/",
-"Mobile Recharge":"https://www.npci.org.in/what-we-do/bharat-billpay/product-overview",
-"DTH Recharge":"https://www.npci.org.in/what-we-do/bharat-billpay/product-overview",
-"Banking":"https://www.rbi.org.in/"
+"Aadhaar":"https://myaadhaar.uidai.gov.in/","PAN Card":"https://www.incometax.gov.in/iec/foportal/","Voter ID":"https://voters.eci.gov.in/","Ration Card":"https://ahara.kar.nic.in/","Vehicle RC":"https://vahan.parivahan.gov.in/vahanservice/vahan/ui/statevalidation/homepage.xhtml","Certificates":"https://www.india.gov.in/","Online Form":"https://www.india.gov.in/","Bill Payment":"https://www.bharatbillpay.com/","Electricity Bill":"https://www.bharatbillpay.com/","Mobile Recharge":"https://www.npci.org.in/what-we-do/bharat-billpay/product-overview","DTH Recharge":"https://www.npci.org.in/what-we-do/bharat-billpay/product-overview","Banking":"https://www.rbi.org.in/"
 };
 const icons={"Aadhaar":"🪪","PAN Card":"💳","Voter ID":"🗳️","Ration Card":"🍚","Vehicle RC":"🚗","Certificates":"📜","Online Form":"📝","Bill Payment":"💸","Electricity Bill":"⚡","Mobile Recharge":"📱","DTH Recharge":"📺","Banking":"🏦"};
-let loginType="admin";
+let type="admin";
 
-function go(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="services")renderServices();}
-function renderServices(){
- const q=(document.getElementById("search")?.value||"").toLowerCase();
- document.getElementById("serviceGrid").innerHTML=Object.keys(portals).filter(n=>n.toLowerCase().includes(q)).map(n=>`
- <div class="svc" onclick="openService('${n.replace(/'/g,"\\'")}')"><b>${icons[n]||"🔗"} ${n}</b><span>OPEN ↗</span></div>`).join("");
+function isLogged(){return !!localStorage.getItem("loggedCustomer");}
+function go(id){
+ if(["dashboard","services","walletPage"].includes(id)&&!isLogged()){alert("ಮೊದಲು Customer Login ಮಾಡಿ.");return go("login");}
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ if(id==="services")renderServices();
+ updateUI();
 }
-function openService(name){window.location.href=portals[name];}
-function filterServices(){go("services");}
-function setType(t){loginType=t;document.getElementById("adminTab").style.background=t==="admin"?"#087fd1":"#dfe8f5";document.getElementById("adminTab").style.color=t==="admin"?"#fff":"#111";document.getElementById("customerTab").style.background=t==="customer"?"#087fd1":"#dfe8f5";document.getElementById("customerTab").style.color=t==="customer"?"#fff":"#111";}
+function setType(t){type=t;document.getElementById("demo").innerHTML=t==="admin"?"Demo Admin: <b>admin / 1234</b>":"Customer account create ಮಾಡಿ login ಮಾಡಿ.";}
 function register(){
- let name=regName.value.trim(),email=regEmail.value.trim().toLowerCase(),mobile=regMobile.value.trim(),p=regPass.value,c=regConfirm.value;
- if(!name||!email||!mobile||!p||!c)return alert("ಎಲ್ಲಾ ವಿವರಗಳನ್ನು ತುಂಬಿ.");
+ let n=regName.value.trim(),e=regEmail.value.trim().toLowerCase(),m=regMobile.value.trim(),p=regPass.value,c=regConfirm.value;
+ if(!n||!e||!m||!p||!c)return alert("ಎಲ್ಲಾ ವಿವರಗಳನ್ನು ತುಂಬಿ.");
  if(p!==c)return alert("Password ಮತ್ತು Confirm Password ಒಂದೇ ಇರಬೇಕು.");
- let users=JSON.parse(localStorage.getItem("customers")||"[]");
- if(users.some(u=>u.email===email||u.mobile===mobile))return alert("ಈ Email ಅಥವಾ Mobile ಈಗಾಗಲೇ ಇದೆ.");
- users.push({name,email,mobile,password:p});localStorage.setItem("customers",JSON.stringify(users));
+ let u=JSON.parse(localStorage.getItem("customers")||"[]");
+ if(u.some(x=>x.email===e||x.mobile===m))return alert("ಈ Email ಅಥವಾ Mobile ಈಗಾಗಲೇ ಇದೆ.");
+ u.push({name:n,email:e,mobile:m,password:p});localStorage.setItem("customers",JSON.stringify(u));
  alert("Customer account ಯಶಸ್ವಿಯಾಗಿ create ಆಯಿತು.");go("login");
 }
 function login(){
  let id=loginId.value.trim().toLowerCase(),p=loginPass.value;
- if(loginType==="admin"){if(id==="admin"&&p==="1234"){alert("Admin Login ಯಶಸ್ವಿ.");go("home");}else alert("Admin Username/Password ತಪ್ಪಾಗಿದೆ.");return;}
- let users=JSON.parse(localStorage.getItem("customers")||"[]"),u=users.find(x=>(x.email===id||x.mobile===id)&&x.password===p);
- if(u){localStorage.setItem("loggedCustomer",JSON.stringify(u));alert("Customer Login ಯಶಸ್ವಿ. ಸ್ವಾಗತ "+u.name);go("home");}else alert("Customer Email/Mobile ಅಥವಾ Password ತಪ್ಪಾಗಿದೆ.");
+ if(type==="admin"){if(id==="admin"&&p==="1234"){localStorage.setItem("loggedCustomer",JSON.stringify({name:"Admin"}));alert("Login ಯಶಸ್ವಿ.");go("dashboard");}else alert("Admin details ತಪ್ಪಾಗಿದೆ.");return;}
+ let u=JSON.parse(localStorage.getItem("customers")||"[]").find(x=>(x.email===id||x.mobile===id)&&x.password===p);
+ if(!u)return alert("Customer Email/Mobile ಅಥವಾ Password ತಪ್ಪಾಗಿದೆ.");
+ localStorage.setItem("loggedCustomer",JSON.stringify(u));alert("Login ಯಶಸ್ವಿ. ಸ್ವಾಗತ "+u.name);go("dashboard");
 }
-renderServices();
+function logout(){localStorage.removeItem("loggedCustomer");alert("Logout ಯಶಸ್ವಿಯಾಗಿದೆ.");go("home");}
+function renderServices(){
+ let q=(search?.value||"").toLowerCase();
+ serviceGrid.innerHTML=Object.keys(portals).filter(n=>n.toLowerCase().includes(q)).map(n=>`<div class="tile" onclick="openService('${n}')"><div class="icon">${icons[n]}</div><b>${n}</b><small>OPEN ↗</small></div>`).join("");
+}
+function openService(n){if(!isLogged())return go("login");window.location.href=portals[n];}
+function addMoney(){
+ let a=Number(addAmount.value);if(!a||a<=0)return alert("ಸರಿಯಾದ amount ಹಾಕಿ.");
+ let w=Number(localStorage.getItem("wallet")||0)+a;localStorage.setItem("wallet",w);addAmount.value="";sync();alert("₹"+a.toFixed(2)+" walletಗೆ add ಆಯಿತು.");
+}
+function sync(){let w=Number(localStorage.getItem("wallet")||0).toFixed(2);wallet.textContent=w;wallet2.textContent=w;let u=JSON.parse(localStorage.getItem("loggedCustomer")||"{}");dashName.textContent=u.name||"Customer";userName.textContent=isLogged()?u.name:"";}
+function updateUI(){
+ let ok=isLogged();loginNav.style.display=ok?"none":"inline-block";regNav.style.display=ok?"none":"inline-block";logoutNav.style.display=ok?"inline-block":"none";guestBox.style.display=ok?"none":"block";roleText.textContent=ok?"Customer Dashboard":"All Digital Services One Place";
+ if(ok&&document.getElementById("home").classList.contains("active"))document.getElementById("home").classList.remove("active"),document.getElementById("dashboard").classList.add("active");
+ sync();
+}
+updateUI();
 </script>
 </body>
 </html>
