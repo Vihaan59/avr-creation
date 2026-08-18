@@ -4,5 +4,4 @@ serviceSelect.innerHTML='<option value="">ಸೇವೆ ಆಯ್ಕೆಮಾಡ�
 year.textContent=new Date().getFullYear();
 const modal=document.getElementById('modal');
 function openLogin(){modal.classList.add('open');modal.setAttribute('aria-hidden','false')}function closeLogin(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
-requestForm.addEventListener('submit',e=>{e.preventDefault();const message=`ನಮಸ್ಕಾರ AVR CREATION,%0Aನನಗೆ ಈ ಸೇವೆ ಬೇಕು:%0Aಸೇವೆ: ${encodeURIComponent(serviceSelect.value)}%0Aಹೆಸರು: ${encodeURIComponent(customerName.value.trim())}%0Aಮೊಬೈಲ್: ${encodeURIComponent(phone.value.trim())}%0Aವಿವರ: ${encodeURIComponent(requestNote.value.trim()||'ಯಾವುದೂ ಇಲ್ಲ')}`;window.open(`https://wa.me/919353439752?text=${message}`,'_blank');});
 modal.addEventListener('click',e=>{if(e.target===modal)closeLogin()});
