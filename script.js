@@ -1,5 +1,5 @@
 const services=[['ರೇಷನ್ ಕಾರ್ಡ್ PDF','₹10','OTP ಜೊತೆಗೆ'],['ರೇಷನ್ ಕಾರ್ಡ್ PDF','₹15','OTP ಇಲ್ಲದೆ'],['ಜಾತಿ ಮತ್ತು ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ ಅರ್ಜಿ','₹120',''],['ಇ-ಶ್ರಮ ಅರ್ಜಿ','₹100',''],['ರೇಷನ್ ಕಾರ್ಡ್ ತಿದ್ದುಪಡಿ ವಿನಂತಿ','₹150','ಕಲಬುರಗಿ ವಿಭಾಗ'],['ಆಧಾರ್ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್','₹10',''],['ಪ್ಯಾನ್ ಕಾರ್ಡ್ ಅರ್ಜಿ','₹150',''],['ಪ್ಯಾನ್ ಕಾರ್ಡ್ ತಿದ್ದುಪಡಿ','₹150',''],['ಆಭಾ ಕಾರ್ಡ್','₹10',''],['SSP ವಿದ್ಯಾರ್ಥಿವೇತನ ಮೊಬೈಲ್ ನಂಬರ್ / ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾವಣೆ','₹20','']];
-serviceGrid.innerHTML=services.map(([name,price,note])=>`<article class="service"><h3>${name}</h3><div><span class="price">${price}</span>${note?` <span class="note">· ${note}</span>`:''}</div></article>`).join('');
+const serviceGrid=document.getElementById('serviceGrid');if(serviceGrid)serviceGrid.innerHTML=services.map(([name,price,note])=>`<article class="service"><h3>${name}</h3><div><span class="price">${price}</span>${note?` <span class="note">· ${note}</span>`:''}</div></article>`).join('');
 serviceSelect.innerHTML='<option value="">ಸೇವೆ ಆಯ್ಕೆಮಾಡಿ</option>'+services.map(([name,price,note])=>`<option value="${name} — ${price}${note?' ('+note+')':''}">${name} — ${price}${note?' ('+note+')':''}</option>`).join('');
 year.textContent=new Date().getFullYear();
 const modal=document.getElementById('modal');
