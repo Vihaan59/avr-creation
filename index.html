@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AVR CREATION | Online Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="contact.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="#home"><span class="brand-mark">A</span><span>AVR <b>CREATION</b></span></a><nav><a href="#services">Services</a><a href="#contact">Contact</a><button class="login-link" onclick="openLogin()">Request Service</button></nav></header>
+  <main id="home">
+    <section class="hero"><div class="hero-copy"><p class="eyebrow">DIGITAL DOCUMENT SERVICES</p><h1>Government services,<br><em>made simple.</em></h1><p class="lead">Fast, trusted and convenient document support from AVR CREATION.</p><div class="hero-actions"><a class="button primary" href="#services">View services</a><button class="button outline" onclick="openLogin()">Request service</button></div></div><div class="hero-card"><span class="card-icon">✓</span><p>Reliable assistance for your everyday government documents.</p><div class="mini-points"><span>Secure</span><span>Quick</span><span>Affordable</span></div></div></section>
+    <section class="services" id="services"><div class="section-heading"><p class="eyebrow">WHAT WE OFFER</p><h2>Our services & prices</h2><p>Choose the service you need. Prices are listed clearly.</p></div><div class="service-grid" id="serviceGrid"></div></section>
+    <section class="contact" id="contact"><div><p class="eyebrow">NEED HELP?</p><h2>Visit or contact AVR CREATION</h2><p>For service requests, please contact us directly.</p><p class="contact-number">Call / WhatsApp: <a href="tel:+919353439752">93534 39752</a></p></div><div class="contact-actions"><a class="button whatsapp" href="https://wa.me/919353439752?text=Hello%20AVR%20CREATION%2C%20I%20need%20help%20with%20a%20service." target="_blank" rel="noopener">WhatsApp us</a><button class="button light" onclick="openLogin()">Request service →</button></div></section>
+  </main>
+  <footer>© <span id="year"></span> AVR CREATION · Digital Service Centre</footer>
+  <div class="modal" id="modal" aria-hidden="true"><div class="modal-box"><button class="close" onclick="closeLogin()" aria-label="Close">×</button><span class="brand-mark small">A</span><h2>Request a service</h2><p>Fill in the details. Your request will open directly in WhatsApp.</p><form id="requestForm"><label>Choose service<select id="serviceSelect" required></select></label><label>Your name<input id="customerName" placeholder="Enter your name" required></label><label>Mobile number<input id="phone" type="tel" inputmode="numeric" placeholder="Enter your mobile number" required></label><label>Message (optional)<textarea id="requestNote" placeholder="Any detail or question"></textarea></label><button class="button primary full" type="submit">Continue on WhatsApp</button></form></div></div>
+  <script src="script.js"></script>
+</body></html>

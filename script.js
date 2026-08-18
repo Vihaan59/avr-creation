@@ -1,0 +1,8 @@
+const services=[['Ration Card PDF','₹10','With OTP'],['Ration Card PDF','₹15','Without OTP'],['Caste & Income Certificate Application','₹120',''],['E-Shram Application','₹100',''],['Ration Card Amendment Request','₹150','Kalaburagi Division'],['Aadhaar Card Download','₹10',''],['PAN Card Application','₹150',''],['PAN Card Correction','₹150',''],['ABHA Card','₹10',''],['SSP Scholarship Mobile Number / Password Change','₹20','']];
+serviceGrid.innerHTML=services.map(([name,price,note])=>`<article class="service"><h3>${name}</h3><div><span class="price">${price}</span>${note?` <span class="note">· ${note}</span>`:''}</div></article>`).join('');
+serviceSelect.innerHTML='<option value="">Select a service</option>'+services.map(([name,price,note])=>`<option value="${name} — ${price}${note?' ('+note+')':''}">${name} — ${price}${note?' ('+note+')':''}</option>`).join('');
+year.textContent=new Date().getFullYear();
+const modal=document.getElementById('modal');
+function openLogin(){modal.classList.add('open');modal.setAttribute('aria-hidden','false')}function closeLogin(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
+requestForm.addEventListener('submit',e=>{e.preventDefault();const message=`Hello AVR CREATION, I need this service:%0AService: ${encodeURIComponent(serviceSelect.value)}%0AName: ${encodeURIComponent(customerName.value.trim())}%0AMobile: ${encodeURIComponent(phone.value.trim())}%0ADetails: ${encodeURIComponent(requestNote.value.trim()||'None')}`;window.open(`https://wa.me/919353439752?text=${message}`,'_blank');});
+modal.addEventListener('click',e=>{if(e.target===modal)closeLogin()});
