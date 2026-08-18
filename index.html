@@ -123,11 +123,26 @@ footer{text-align:center;padding:30px;color:#68758a}
 </section>
 
 <section id="wallet" class="page hidden">
- <div class="grid">
-  <div class="card"><b>💳 Wallet</b><h2 id="walletBalance">₹ 0.00</h2><button class="green" onclick="addMoney()">+ Add Money</button></div>
-  <div class="card"><b>💸 Payout</b><h2>₹ 0.00</h2><button class="blue" onclick="alert('Payout request screen')">Payout</button></div>
-  <div class="card"><b>📊 Reports</b><h2 id="reportCount">0</h2></div>
-  <div class="card"><b>🆘 Support</b><h2>Need Help?</h2><button onclick="alert('Contact Support')">Support</button></div>
+ <div id="adminWallet" class="hidden">
+  <div class="grid">
+   <div class="card"><b>💳 Admin Wallet</b><h2 id="walletBalance">₹ 0.00</h2><button class="green" onclick="addMoney()">+ Add Money</button></div>
+   <div class="card"><b>💸 Payout</b><h2>₹ 0.00</h2><button class="blue" onclick="alert('Payout request screen')">Payout</button></div>
+   <div class="card"><b>📊 Reports</b><h2 id="reportCount">0</h2></div>
+   <div class="card"><b>🆘 Support</b><h2>Need Help?</h2><button onclick="alert('Contact Support')">Support</button></div>
+  </div>
+ </div>
+ <div id="customerWallet" class="hidden">
+  <div class="card">
+   <h2>💳 Online Payment</h2>
+   <p>Customerಗೆ Wallet/Amount handling ಇಲ್ಲ. Service select ಮಾಡಿ online payment ಮಾತ್ರ ಮಾಡಬಹುದು.</p>
+   <div class="qrbox">
+    <div class="fakeqr">▦</div>
+    <h3>Scan & Pay</h3>
+    <p>ನಿಮ್ಮ UPI app ಬಳಸಿ payment ಮಾಡಿ.</p>
+    <input id="customerPayRef" placeholder="UPI Transaction ID / Reference">
+    <button class="green" style="width:100%" onclick="submitPayment()">Payment Done / Submit</button>
+   </div>
+  </div>
  </div>
 </section>
 
@@ -244,8 +259,128 @@ function renderAdmin(){
 }
 function setAmount(i){const v=Number(document.getElementById("amt"+i).value);if(v<0)return;services[i][2]=v;save();alert(services[i][0]+" amount updated.");renderAdmin()}
 function openPasswordChange(){showPage("forgot");document.getElementById("forgotUser").value=current?current.user:""}
+
+// Role rules: Admin controls service amounts; Customer can only pay online.
+function showPage(id){
+ if(["home","services","customer","wallet","history","admin"].includes(id)&&!current){id="login"}
+ if(id==="admin" && (!current || current.role!=="admin")){id="home"}
+ document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ if(id==="services")renderServices();
+ if(id==="home")renderQuick();
+ if(id==="customer")renderCustomer();
+ if(id==="wallet")renderWallet();
+ if(id==="history")renderHistory();
+ if(id==="admin")renderAdmin();
+ window.scrollTo(0,0);
+}
+
+function renderServices(){
+ const q=(document.getElementById("serviceSearch")?.value||"").toLowerCase();
+ const list=services.filter(s=>s[0].toLowerCase().includes(q));
+ document.getElementById("serviceGrid").innerHTML=list.map((s)=>{
+   const i=services.indexOf(s);
+   if(current && current.role==="admin"){
+     return `<div class="card service"><div class="icon">${s[1]}</div><h3>${s[0]}</h3>
+       <div class="price">₹ ${Number(s[2]).toFixed(2)}</div>
+       <button class="blue" onclick="openService(${i})">⚙️ ADMIN HANDLE</button></div>`;
+   }
+   return `<div class="card service"><div class="icon">${s[1]}</div><h3>${s[0]}</h3>
+     <div class="price">₹ ${Number(s[2]).toFixed(2)}</div>
+     <button class="green" onclick="customerPayService(${i})">💳 PAY ONLINE</button></div>`;
+ }).join("");
+}
+
+function renderQuick(){
+ const el=document.getElementById("quickGrid");
+ el.innerHTML=services.slice(0,8).map((s)=>{
+   const i=services.indexOf(s);
+   const action=current&&current.role==="admin"
+     ? `<button class="blue" onclick="openService(${i})">ADMIN</button>`
+     : `<button class="green" onclick="customerPayService(${i})">PAY ONLINE</button>`;
+   return `<div class="card service"><div class="icon">${s[1]}</div><h3>${s[0]}</h3><div class="price">₹ ${Number(s[2]).toFixed(2)}</div>${action}</div>`;
+ }).join("");
+}
+
+function renderWallet(){
+ document.getElementById("adminWallet").classList.toggle("hidden",!(current&&current.role==="admin"));
+ document.getElementById("customerWallet").classList.toggle("hidden",!(current&&current.role==="customer"));
+ if(current&&current.role==="admin"){
+   document.getElementById("walletBalance").textContent="₹ "+wallet.toFixed(2);
+   document.getElementById("reportCount").textContent=history.length;
+ }
+}
+
+function customerPayService(i){
+ if(!current || current.role!=="customer"){alert("Customer login ಮಾಡಿ.");showPage("login");return;}
+ const s=services[i];
+ document.getElementById("modalTitle").textContent=s[1]+" "+s[0];
+ document.getElementById("modalBody").innerHTML=`
+   <p><b>Service Amount: ₹ ${Number(s[2]).toFixed(2)}</b></p>
+   <div class="qrbox">
+     <div class="fakeqr">▦</div>
+     <h3>Online Payment</h3>
+     <p>UPI app ಮೂಲಕ ₹ ${Number(s[2]).toFixed(2)} payment ಮಾಡಿ.</p>
+     <input id="payMobile" inputmode="numeric" maxlength="10" value="${current.user}" placeholder="Mobile Number">
+     <input id="payRef" placeholder="UPI Transaction ID / Reference">
+     <button class="green" style="width:100%" onclick="submitServicePayment(${i})">Payment Done → Send to Admin</button>
+   </div>`;
+ document.getElementById("serviceModal").classList.add("show");
+}
+
+function submitServicePayment(i){
+ const ref=document.getElementById("payRef").value.trim();
+ if(!ref){alert("UPI Transaction ID / Reference ಹಾಕಿ.");return;}
+ const s=services[i];
+ history.unshift({service:s[0],mobile:current.user,amount:Number(s[2]),reference:ref,status:"Pending Admin",date:new Date().toLocaleString()});
+ save();
+ alert("Payment details Adminಗೆ ಕಳುಹಿಸಲಾಗಿದೆ. Admin approval ನಂತರ service process ಆಗುತ್ತದೆ.");
+ closeModal();
+}
+
+function submitPayment(){
+ const ref=document.getElementById("customerPayRef").value.trim();
+ if(!ref){alert("UPI Transaction ID / Reference ಹಾಕಿ.");return;}
+ history.unshift({service:"Online Payment",mobile:current.user,amount:0,reference:ref,status:"Pending Admin",date:new Date().toLocaleString()});
+ save(); alert("Payment submitted to Admin."); renderHistory();
+}
+
+function renderHistory(){
+ const box=document.getElementById("historyBox");
+ let list=current&&current.role==="customer"
+   ? history.filter(x=>x.mobile===current.user)
+   : history;
+ box.innerHTML=list.length?`<table class="table"><tr><th>Service</th><th>Mobile</th><th>Amount</th><th>Status</th><th>Reference</th><th>Date</th></tr>`
+ +list.map(x=>`<tr><td>${x.service}</td><td>${x.mobile}</td><td>₹${x.amount}</td><td>${x.status||"Saved"}</td><td>${x.reference||"-"}</td><td>${x.date}</td></tr>`).join("")
+ +"</table>":"ಇನ್ನೂ transactions ಇಲ್ಲ.";
+}
+
+function renderAdmin(){
+ if(!current||current.role!=="admin")return;
+ document.getElementById("adminServices").innerHTML=
+   `<h3>💰 Service Amount Handling — Admin Only</h3>`+
+   services.map((s,i)=>`<div class="row" style="margin-bottom:8px">
+     <input value="${s[0]}" readonly>
+     <input id="amt${i}" type="number" value="${s[2]}" min="0">
+     <button class="green" onclick="setAmount(${i})">Save ₹</button>
+   </div>`).join("")+
+   `<hr><h3>📥 Customer Payment Requests</h3>`+
+   (history.length?history.map((x,i)=>`<div class="card" style="margin:8px 0">
+     <b>${x.service}</b> — ₹${x.amount}<br>
+     Mobile: ${x.mobile}<br>
+     Ref: ${x.reference||"-"}<br>
+     Status: <b>${x.status||"Saved"}</b><br>
+     ${x.status==="Pending Admin"?`<button class="green" onclick="approveRequest(${i})">Approve</button>
+     <button class="red" onclick="rejectRequest(${i})">Reject</button>`:""}
+   </div>`).join(""):"No customer requests yet.");
+}
+
+function approveRequest(i){history[i].status="Approved";save();renderAdmin();alert("Request approved.");}
+function rejectRequest(i){history[i].status="Rejected";save();renderAdmin();alert("Request rejected.");}
+
 updateHeader();
 if(current)showPage("home");else showPage("login");
+
 </script>
 </body>
 </html>
