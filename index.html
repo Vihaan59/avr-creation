@@ -68,9 +68,15 @@ const portals={
 "Banking":"https://www.rbi.org.in/"
 };
 function openService(name){
-  const url=portals[name];
-  if(url){ window.location.href=url; return; }
-  alert(name+" service-ge direct web portal illa. Idu cyber centre local service.");
+  const url = portals[name];
+  if(!url){
+    alert("Service link not found");
+    return;
+  }
+  const tab = window.open(url, "_blank");
+  if(!tab){
+    window.location.href = url;
+  }
 }
 const list=[["🪪","Aadhaar"],["💳","PAN Card"],["🗳️","Voter ID"],["🍚","Ration Card"],["🚗","Vehicle RC"],["📱","Mobile Recharge"],["⚡","Electricity Bill"],["🏦","Banking"],["🖨️","Print"],["📑","Xerox"],["📠","Scan"],["📸","Photo"],["📝","Online Form"],["📧","Email"],["🧾","Bill Payment"],["💻","Typing"],["📺","DTH Recharge"],["📄","Certificates"]];
 let wallet=0,sales=0,customers=new Set(),history=[],prices={};
