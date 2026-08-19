@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raghu Cyber Centre Pro</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f7ff;color:#17233d}
+header{background:linear-gradient(135deg,#062f66,#0878c9);color:#fff;padding:14px 16px;position:sticky;top:0;z-index:20}
+.head{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand{font-size:21px;font-weight:800}.small{font-size:12px;opacity:.9}
+nav{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}
+nav button{background:#fff;color:#124a7d}.green{background:#0a8867;color:#fff}.blue{background:#087dd2;color:#fff}.red{background:#d33;color:#fff}
+.container{max-width:1100px;margin:auto;padding:18px}
+.card{background:#fff;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 20px #173b6414}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.service{text-align:center;min-height:170px}.icon{font-size:38px}.price{font-weight:800;margin:8px 0}
+input,select{width:100%;padding:12px;border:1px solid #ccd5e3;border-radius:9px;margin:6px 0 12px;font-size:15px}
+label{font-weight:700;font-size:14px}.row{display:grid;grid-template-columns:1fr 150px auto;gap:8px;align-items:center}
+.hidden{display:none!important}.notice{padding:12px;border-radius:10px;background:#fff6df;margin:10px 0}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal.show{display:flex}.modalbox{background:#fff;border-radius:16px;padding:20px;width:min(600px,100%);max-height:90vh;overflow:auto}
+.table{width:100%;border-collapse:collapse}.table th,.table td{padding:9px;border-bottom:1px solid #e4e8ef;text-align:left}
+.search{margin-bottom:12px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr}.head{align-items:flex-start}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.brand{font-size:18px}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="head">
+<div>
+<div class="brand">🟢 RAGHU CYBER CENTRE PRO</div>
+<div class="small">ಆನ್‌ಲೈನ್ ಸೇವೆಗಳು • Customer & Admin Portal</div>
+</div>
+<div id="userBox" class="small">ಲಾಗಿನ್ ಆಗಿಲ್ಲ</div>
+</div>
+<nav>
+<button onclick="showPage('home')">🏠 Home</button>
+<button onclick="showPage('services')">📁 Services</button>
+<button onclick="showPage('customer')">👤 Customer</button>
+<button id="adminNav" class="hidden" onclick="showPage('admin')">⚙️ Admin</button>
+<button id="logoutBtn" class="hidden red" onclick="logout()">🚪 Logout</button>
+</nav>
+</header>
+
+<main class="container">
+
+<section id="login" class="card">
+<h2>🔐 Login</h2>
+<div class="notice">Demo Admin credentials: <b>admin / 1234</b>. Change these before real deployment.</div>
+<label>Username / Mobile</label>
+<input id="loginUser" placeholder="Username ಅಥವಾ mobile">
+<label>Password</label>
+<input id="loginPass" type="password" placeholder="Password">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="blue" onclick="login('customer')">Customer Login</button>
+<button class="blue" onclick="login('admin')">Admin Login</button>
+</div>
+</section>
+
+<section id="home" class="hidden">
+<div class="card">
+<h2>Welcome to Raghu Cyber Centre</h2>
+<p>Customer services online payment ಮೂಲಕ submit ಮಾಡಬಹುದು. Admin customer requests ಅನ್ನು review/approve ಮಾಡಬಹುದು.</p>
+</div>
+<div id="quickGrid" class="grid"></div>
+</section>
+
+<section id="services" class="hidden">
+<div class="card">
+<h2>📁 Live Services</h2>
+<input class="search" id="serviceSearch" oninput="renderServices()" placeholder="Service search...">
+<div id="serviceGrid" class="grid"></div>
+</div>
+</section>
+
+<section id="customer" class="hidden">
+<div class="card">
+<h2>👤 Customer Details</h2>
+<div id="customerDetails"></div>
+<h3>My Payment Requests</h3>
+<div id="customerHistory"></div>
+</div>
+</section>
+
+<section id="admin" class="hidden">
+<div class="card">
+<h2>⚙️ Admin Panel</h2>
+<p><b>Amount handling ಮತ್ತು customer request approval — Admin ಮಾತ್ರ.</b></p>
+<div id="adminServices"></div>
+<h3>📥 Customer Payment Requests</h3>
+<div id="adminRequests"></div>
+</div>
+</section>
+
+<section id="wallet" class="hidden">
+<div class="card">
+<h2>💰 Admin Wallet</h2>
+<p>Balance: <b id="walletBalance">₹0.00</b></p>
+<p>Total requests: <b id="reportCount">0</b></p>
+</div>
+</section>
+
+</main>
+
+<div id="serviceModal" class="modal">
+<div class="modalbox">
+<div style="display:flex;justify-content:space-between;gap:10px">
+<h2 id="modalTitle">Service</h2>
+<button onclick="closeModal()">✕</button>
+</div>
+<div id="modalBody"></div>
+</div>
+</div>
+
+<script>
+const AHAARA="https://ahara.kar.nic.in/";
+let current=JSON.parse(localStorage.getItem("rcc_current")||"null");
+let history=JSON.parse(localStorage.getItem("rcc_history")||"[]");
+let services=JSON.parse(localStorage.getItem("rcc_services")||"null")||[
+["Ration Card PDF - OTP","📄",10],
+["Ration Card PDF - Official Portal","📑",10],
+["UPI QR Payment","💳",10],
+["Income Certificate","📜",20],
+["Caste Certificate","📜",20],
+["Residence Certificate","🏠",20],
+["Aadhaar Service Assistance","🪪",20],
+["Online Application","📝",20]
+];
+
+function save(){localStorage.setItem("rcc_current",JSON.stringify(current));localStorage.setItem("rcc_history",JSON.stringify(history));localStorage.setItem("rcc_services",JSON.stringify(services));}
+
+function login(role){
+ const u=document.getElementById("loginUser").value.trim(),p=document.getElementById("loginPass").value;
+ if(role==="admin"){
+   if(u!=="admin"||p!=="1234"){alert("Admin login ತಪ್ಪಾಗಿದೆ.");return;}
+   current={role:"admin",user:u,name:"Admin"};
+ }else{
+   if(!u){alert("Customer mobile/username ಹಾಕಿ.");return;}
+   current={role:"customer",user:u,name:"Customer"};
+ }
+ save();updateHeader();showPage("home");
+}
+
+function logout(){current=null;save();updateHeader();showPage("login");}
+function updateHeader(){
+ document.getElementById("userBox").textContent=current?`${current.name} (${current.role})`:"ಲಾಗಿನ್ ಆಗಿಲ್ಲ";
+ document.getElementById("adminNav").classList.toggle("hidden",!(current&&current.role==="admin"));
+ document.getElementById("logoutBtn").classList.toggle("hidden",!current);
+}
+function showPage(id){
+ if(["home","services","customer","admin","wallet"].includes(id)&&!current){id="login";}
+ if(id==="admin"&&(!current||current.role!=="admin")){id="home";}
+ document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ if(id==="home")renderQuick();
+ if(id==="services")renderServices();
+ if(id==="customer")renderCustomer();
+ if(id==="admin")renderAdmin();
+ if(id==="wallet")renderWallet();
+ window.scrollTo(0,0);
+}
+
+function serviceCard(s,i,quick=false){
+ const action=current&&current.role==="admin"
+ ? `<button class="blue" onclick="adminHandle(${i})">⚙️ ADMIN HANDLE</button>`
+ : `<button class="green" onclick="customerPayService(${i})">💳 PAY ONLINE</button>`;
+ return `<div class="card service"><div class="icon">${s[1]}</div><h3>${s[0]}</h3><div class="price">₹ ${Number(s[2]).toFixed(2)}</div>${action}</div>`;
+}
+function renderQuick(){document.getElementById("quickGrid").innerHTML=services.slice(0,8).map((s,i)=>serviceCard(s,i,true)).join("");}
+function renderServices(){
+ const q=(document.getElementById("serviceSearch")?.value||"").toLowerCase();
+ document.getElementById("serviceGrid").innerHTML=services.map((s,i)=>({s,i}))
+ .filter(x=>x.s[0].toLowerCase().includes(q)).map(x=>serviceCard(x.s,x.i)).join("");
+}
+
+function adminHandle(i){
+ if(!current||current.role!=="admin"){alert("Admin login ಬೇಕು.");return;}
+ const s=services[i];
+ if(s[0]==="Ration Card PDF - OTP"){
+   openAdminService(s,"Official Ahara OTP flow");
+ }else{
+   openAdminService(s,"Customer details ದಾಖಲಿಸಿ service process ಮಾಡಿ.");
+ }
+}
+function openAdminService(s,msg){
+ document.getElementById("modalTitle").textContent="⚙️ "+s[0];
+ document.getElementById("modalBody").innerHTML=`
+ <p><b>Service Amount: ₹${Number(s[2]).toFixed(2)}</b></p>
+ <div class="notice">${msg}</div>
+ <label>Customer Mobile</label><input id="adminMobile" inputmode="numeric" maxlength="10" placeholder="10 digit mobile">
+ <label>Customer Details</label><input id="adminDetails" placeholder="Details">
+ <button class="green" style="width:100%" onclick="saveAdminService('${escapeJs(s[0])}',${Number(s[2])})">Save Service</button>`;
+ document.getElementById("serviceModal").classList.add("show");
+}
+function saveAdminService(name,amount){
+ const m=document.getElementById("adminMobile").value.trim();
+ if(!/^\d{10}$/.test(m)){alert("10 digit mobile number ಹಾಕಿ.");return;}
+ history.unshift({service:name,mobile:m,amount,status:"Admin Handled",date:new Date().toLocaleString()});
+ save();closeModal();renderAdmin();alert("Service saved.");
+}
+
+function customerPayService(i){
+ if(!current||current.role!=="customer"){alert("Customer login ಮಾಡಿ.");showPage("login");return;}
+ const s=services[i];
+ if(s[0]==="Ration Card PDF - OTP"){
+   openRationOtp(s,i);return;
+ }
+ if(s[0]==="Ration Card PDF - Official Portal"){
+   document.getElementById("modalTitle").textContent="📑 Ration Card PDF";
+   document.getElementById("modalBody").innerHTML=`
+   <div class="notice">Ration card downloadಗಾಗಿ official Karnataka Ahara portal ಮಾತ್ರ ಬಳಸಿ. OTP ಅನ್ನು ಈ websiteಗೆ share ಮಾಡಬೇಡಿ.</div>
+   <button class="blue" style="width:100%" onclick="window.open('${AHAARA}','_blank')">Open Official Ahara Portal ↗</button>
+   <p style="font-size:13px">ನಿಮ್ಮ ಸ್ವಂತ ration card number/OTP ಅನ್ನು official portalನಲ್ಲಿ ನೀವೇ enter ಮಾಡಿ.</p>`;
+   document.getElementById("serviceModal").classList.add("show");return;
+ }
+ document.getElementById("modalTitle").textContent=s[1]+" "+s[0];
+ document.getElementById("modalBody").innerHTML=`
+ <p><b>Service Amount: ₹${Number(s[2]).toFixed(2)}</b></p>
+ <label>UPI Transaction ID / Reference</label>
+ <input id="payRef" placeholder="Payment reference">
+ <button class="green" style="width:100%" onclick="submitServicePayment(${i})">Payment Done → Send to Admin</button>`;
+ document.getElementById("serviceModal").classList.add("show");
+}
+
+function openRationOtp(s,i){
+ document.getElementById("modalTitle").textContent="📄 Ration Card PDF - OTP";
+ document.getElementById("modalBody").innerHTML=`
+ <div class="notice">ನಿಮ್ಮ ಸ್ವಂತ ration cardಗೆ ಮಾತ್ರ OTP ಬಳಸಿ. OTP ಅನ್ನು ಈ siteನಲ್ಲಿ collect/store ಮಾಡಲಾಗುವುದಿಲ್ಲ.</div>
+ <label>Ration Card Number</label><input id="rcNumber" placeholder="Ration Card Number">
+ <button class="blue" style="width:100%" onclick="openOfficialRation()">Continue to Official Ahara ↗</button>
+ <hr>
+ <label>Optional UPI Transaction Reference</label><input id="rcRef" placeholder="Payment reference">
+ <button class="green" style="width:100%" onclick="submitRationRequest(${i})">Send Service Request to Admin</button>`;
+ document.getElementById("serviceModal").classList.add("show");
+}
+function openOfficialRation(){window.open(AHAARA,"_blank");}
+function submitRationRequest(i){
+ const n=document.getElementById("rcNumber").value.trim(),ref=document.getElementById("rcRef").value.trim();
+ if(!n){alert("Ration Card Number ಹಾಕಿ.");return;}
+ history.unshift({service:services[i][0],mobile:current.user,amount:Number(services[i][2]),cardMasked:maskCard(n),reference:ref,status:"Pending Admin",date:new Date().toLocaleString()});
+ save();closeModal();alert("Request Adminಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.");renderCustomer();
+}
+function maskCard(v){return v.length>4?"****"+v.slice(-4):"****";}
+function submitServicePayment(i){
+ const ref=document.getElementById("payRef").value.trim();
+ if(!ref){alert("UPI Transaction ID / Reference ಹಾಕಿ.");return;}
+ const s=services[i];
+ history.unshift({service:s[0],mobile:current.user,amount:Number(s[2]),reference:ref,status:"Pending Admin",date:new Date().toLocaleString()});
+ save();closeModal();alert("Payment details Adminಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.");renderCustomer();
+}
+
+function renderCustomer(){
+ if(!current)return;
+ document.getElementById("customerDetails").innerHTML=`<p><b>Name:</b> ${current.name}</p><p><b>Username/Mobile:</b> ${current.user}</p><p><b>Role:</b> Customer</p>`;
+ const list=history.filter(x=>x.mobile===current.user);
+ document.getElementById("customerHistory").innerHTML=tableHTML(list);
+}
+function tableHTML(list){
+ return list.length?`<div style="overflow:auto"><table class="table"><tr><th>Service</th><th>Amount</th><th>Status</th><th>Date</th></tr>${list.map(x=>`<tr><td>${x.service}</td><td>₹${x.amount}</td><td>${x.status||"Saved"}</td><td>${x.date}</td></tr>`).join("")}</table></div>`:"ಇನ್ನೂ transactions ಇಲ್ಲ.";
+}
+function renderAdmin(){
+ if(!current||current.role!=="admin")return;
+ document.getElementById("adminServices").innerHTML=`<h3>💰 Service Amount Handling — Admin Only</h3>`+
+ services.map((s,i)=>`<div class="row"><input value="${s[0]}" readonly><input id="amt${i}" type="number" min="0" value="${s[2]}"><button class="green" onclick="setAmount(${i})">Save</button></div>`).join("");
+ const req=history.map((x,i)=>({x,i})).filter(o=>o.x.status==="Pending Admin");
+ document.getElementById("adminRequests").innerHTML=req.length?req.map(o=>`<div class="card"><b>${o.x.service}</b> — ₹${o.x.amount}<br>Mobile: ${o.x.mobile}<br>Reference: ${o.x.reference||"-"}<br>Status: <b>${o.x.status}</b><br><br><button class="green" onclick="approveRequest(${o.i})">Approve</button> <button class="red" onclick="rejectRequest(${o.i})">Reject</button></div>`).join(""):"No pending customer requests.";
+}
+function setAmount(i){
+ const v=Number(document.getElementById("amt"+i).value);
+ if(v<0||!Number.isFinite(v)){alert("Valid amount ಹಾಕಿ.");return;}
+ services[i][2]=v;save();renderAdmin();alert("Amount updated.");
+}
+function approveRequest(i){history[i].status="Approved";save();renderAdmin();alert("Request approved.");}
+function rejectRequest(i){history[i].status="Rejected";save();renderAdmin();alert("Request rejected.");}
+function renderWallet(){document.getElementById("walletBalance").textContent="₹0.00";document.getElementById("reportCount").textContent=history.length;}
+function closeModal(){document.getElementById("serviceModal").classList.remove("show");}
+function escapeJs(s){return s.replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+
+updateHeader();
+showPage(current?"home":"login");
+</script>
+</body>
+</html>
