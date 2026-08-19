@@ -81,18 +81,20 @@ save();showPage("home");
 function adminLogin(){
 let email=document.getElementById("adminEmail").value.trim().toLowerCase();
 let pass=document.getElementById("adminPassword").value;
-if(!email||!pass){alert("Admin email ಮತ್ತು password ಹಾಕಿ.");return}
 
-/* Static GitHub Pages demo login.
-   Demo credentials: admin / 1234
-   For real production use, replace this with Firebase Authentication. */
-if((email==="admin" || email==="admin@gmail.com") && pass==="1234"){
-  currentUser={name:"Admin",email:email,admin:true};
-  save();
-  alert("Admin login successful.");
-  showPage("admin");
-  return;
+if(!email||!pass){
+alert("Admin email ಮತ್ತು password ಹಾಕಿ.");
+return;
 }
+
+if(email==="admin@gmail.com" && pass==="1234"){
+currentUser={name:"Admin",email:email,admin:true};
+save();
+alert("Admin login successful.");
+showPage("admin");
+return;
+}
+
 alert("Admin email ಅಥವಾ password ತಪ್ಪಾಗಿದೆ.");
 }
 
