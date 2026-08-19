@@ -157,6 +157,23 @@ footer{text-align:center;padding:30px;color:#68758a}
 
 <footer>© 2026 Raghu Cyber Centre Pro</footer>
 
+
+<script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCobCMxXKtScSDhO5ZUBnXkcveiZ1yVH8g",
+  authDomain: "raghu-cyber-centre.firebaseapp.com",
+  projectId: "raghu-cyber-centre",
+  storageBucket: "raghu-cyber-centre.firebasestorage.app",
+  messagingSenderId: "275180323748",
+  appId: "1:275180323748:web:a25d9584d5e1d1ce233731",
+  measurementId: "G-06S7PRTZL8"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const firebaseAuth = firebase.auth();
+</script>
+
 <script>
 const SERVICES=[
 {id:1,icon:"📄",name:"Ration Card PDF - OTP",price:20,info:"Ration card related online service"},
@@ -238,11 +255,37 @@ currentUser={mobile:u.mobile,name:u.name,admin:false};
 save();showPage("home");
 }
 
-function adminLogin(){
+async function adminLogin(){
 let email=document.getElementById("adminEmail").value.trim().toLowerCase();
 let pass=document.getElementById("adminPassword").value;
-if(!email||!pass){alert("Admin email ಮತ್ತು password ಹಾಕಿ.");return}
-alert("Admin loginಗೆ ನಿಮ್ಮ Firebase Admin account credentials ಬಳಸಬೇಕು. ಈ page local demo storage ಬಳಸುತ್ತಿದೆ; production admin securityಗಾಗಿ Firebase Auth setup ಮಾಡಬೇಕು.");
+const ADMIN_EMAIL="raghunaikskp9686@gmail.com";
+
+if(!email||!pass){
+  alert("Admin email ಮತ್ತು password ಹಾಕಿ.");
+  return;
+}
+if(email!==ADMIN_EMAIL){
+  alert("ಈ email ಗೆ Admin access ಇಲ್ಲ.");
+  return;
+}
+
+try{
+  const credential=await firebaseAuth.signInWithEmailAndPassword(email,pass);
+  currentUser={email:credential.user.email,name:"Admin",admin:true};
+  save();
+  document.getElementById("adminPassword").value="";
+  showPage("admin");
+  alert("Admin login successful.");
+}catch(error){
+  console.error(error);
+  let msg="Admin login failed.";
+  if(error.code==="auth/user-not-found") msg="Firebase Auth ನಲ್ಲಿ ಈ Admin email account ಇಲ್ಲ.";
+  else if(error.code==="auth/wrong-password" || error.code==="auth/invalid-credential") msg="Admin password ತಪ್ಪಾಗಿದೆ.";
+  else if(error.code==="auth/invalid-email") msg="Admin email ಸರಿಯಾಗಿಲ್ಲ.";
+  else if(error.code==="auth/operation-not-allowed") msg="Firebase Console ನಲ್ಲಿ Email/Password sign-in enable ಮಾಡಿ.";
+  else if(error.code==="auth/too-many-requests") msg="ತುಂಬಾ login attempts ಆಗಿವೆ. ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ try ಮಾಡಿ.";
+  alert(msg);
+}
 }
 
 function logout(){
