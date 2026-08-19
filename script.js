@@ -9,7 +9,7 @@ async function adminLogin(){
     return;
   }
 
-  if(email !== ADMIN_EMAIL){
+ if(email !== ADMIN_EMAIL){
     alert("ಈ email ಗೆ Admin access ಇಲ್ಲ.");
     return;
   }
