@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raghu Cyber Centre Pro</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f7ff;color:#17233d}
+header{background:linear-gradient(135deg,#062f66,#0878c9);color:#fff;padding:14px 16px;position:sticky;top:0;z-index:20}
+.head{max-width:1150px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}.brand{font-size:21px;font-weight:800}
+.container{max-width:1150px;margin:auto;padding:16px}.card{background:#fff;border-radius:16px;padding:17px;margin-bottom:16px;box-shadow:0 5px 20px #173b6414}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.service{text-align:center;min-height:190px}.icon{font-size:38px}.price{font-weight:800;margin:8px}
+button{border:0;border-radius:9px;padding:10px 13px;font-weight:700;cursor:pointer}.blue{background:#087dd2;color:#fff}.green{background:#098765;color:#fff}.red{background:#d93025;color:#fff}.gray{background:#e8edf4;color:#24344b}
+input,textarea{width:100%;padding:12px;border:1px solid #ccd5e3;border-radius:9px;margin:6px 0 12px;font-size:15px}
+.hidden{display:none!important}.tabs{display:flex;gap:8px}.tabs button{flex:1}.active{background:#087dd2!important;color:#fff}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:100;padding:15px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:16px;padding:20px;width:min(650px,100%);max-height:90vh;overflow:auto}
+.notice{padding:12px;background:#fff5d8;border-radius:10px;margin:10px 0;font-size:13px}.wallet{font-size:25px;font-weight:800}
+table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #e4e8ef;text-align:left}.status{padding:5px 8px;border-radius:7px;background:#eef5ff}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.grid{grid-template-columns:1fr}.brand{font-size:18px}}
+</style>
+</head>
+<body>
+<header><div class="head"><div><div class="brand">🟢 RAGHU CYBER CENTRE PRO</div><small>Customer & Admin Portal</small></div><div id="userBox">Login ಮಾಡಿ</div></div></header>
+
+<main class="container">
+<section id="login" class="card" style="max-width:500px;margin:25px auto">
+<h2>🔐 Login</h2><div class="tabs">
+<button id="ct" class="active" onclick="tab('c')">👤 Customer</button><button id="at" onclick="tab('a')">⚙️ Admin</button></div>
+<div id="cb"><label>Mobile</label><input id="cm" maxlength="10" inputmode="numeric"><label>Password</label><input id="cp" type="password">
+<button class="blue" onclick="customerLogin()">Login</button> <button class="gray" onclick="showReg()">Register</button></div>
+<div id="ab" class="hidden"><label>Admin Mobile</label><input id="am" maxlength="10" inputmode="numeric"><label>Admin Password</label><input id="ap" type="password">
+<button class="blue" onclick="adminLogin()">Admin Login</button></div>
+<div id="rb" class="hidden"><h3>Customer Register</h3><input id="rn" placeholder="Name"><input id="rm" maxlength="10" placeholder="Mobile"><input id="rp" type="password" placeholder="Password"><button class="green" onclick="register()">Register</button> <button class="gray" onclick="tab('c')">Back</button></div>
+</section>
+
+<section id="app" class="hidden">
+<div class="card"><h2>👋 <span id="welcome"></span></h2><div class="grid">
+<div class="card"><b>💰 Wallet</b><div id="bal" class="wallet">₹0</div></div>
+<div class="card"><b>📋 Requests</b><div id="reqCount" class="wallet">0</div></div>
+<div class="card"><b>✅ Completed</b><div id="doneCount" class="wallet">0</div></div>
+<div class="card"><b>⚙️ Mode</b><div id="mode" class="wallet">Customer</div></div></div>
+<button class="red" onclick="logout()">Logout</button></div>
+
+<div id="customerArea">
+<div class="card"><h2>💰 Wallet</h2><div id="wallet2" class="wallet">₹0</div><p>UPI payment ಮಾಡಿದ ನಂತರ recharge request submit ಮಾಡಿ. Admin verify ಮಾಡಿ amount add ಮಾಡುತ್ತಾರೆ.</p><button class="green" onclick="openRecharge()">➕ Add Amount</button></div>
+<div class="card"><h2>📂 Services</h2><input id="search" oninput="renderServices()" placeholder="Search service..."><div id="services" class="grid"></div></div>
+<div class="card"><h2>📜 My History</h2><div id="history"></div></div>
+</div>
+
+<div id="adminArea" class="hidden">
+<div class="card"><h2>⚙️ Admin Settings — Service Prices</h2><div id="settings"></div><button class="green" onclick="savePrices()">💾 Save Prices</button></div>
+<div class="card"><h2>💳 Recharge Requests</h2><div id="recharges"></div></div>
+<div class="card"><h2>📋 Customer Service Requests</h2><div id="requests"></div></div>
+</div>
+</section>
+</main>
+
+<div id="serviceModal" class="modal"><div class="modalbox"><h2 id="st"></h2><p id="si"></p><textarea id="note" placeholder="Customer details / note"></textarea><button class="blue" onclick="submitRequest()">📤 Submit Request</button> <button class="gray" onclick="closeM()">Cancel</button></div></div>
+
+<div id="rechargeModal" class="modal"><div class="modalbox" style="text-align:center"><h2>💳 Add Amount</h2>
+<p><b>UPI QR Payment</b></p><img src="payment-qr.jpg" style="max-width:280px;width:100%;border-radius:12px" onerror="this.style.display='none'">
+<p>QR image ಇಲ್ಲದಿದ್ದರೆ `payment-qr.jpg` ಅನ್ನು GitHub repositoryಗೆ upload ಮಾಡಿ.</p>
+<input id="ra" type="number" min="1" placeholder="Amount ₹"><button class="green" onclick="rechargeRequest()">Send Recharge Request</button> <button class="gray" onclick="closeR()">Close</button></div></div>
+
+<script>
+const ADMIN_MOBILE="8310049524",ADMIN_PASSWORD="1234";
+const DEFAULT=[
+["📄","Ration Card PDF - OTP",20,"Ration card related online service"],
+["📄","Ration Card PDF - Without OTP",25,"Ration card PDF service"],
+["🌾","Gruha Lakshmi Apply",30,"Gruha Lakshmi application assistance"],
+["🪪","Caste Application",30,"Caste certificate application assistance"],
+["💰","Income Application",30,"Income certificate application assistance"],
+["🏠","Residence Certificate",30,"Residence certificate application assistance"],
+["🪪","Aadhaar / e-KYC Assistance",30,"Aadhaar assistance"],
+["📱","Mobile Number Service",20,"Assistance service; no private-person data lookup"],
+["🖨️","Print / Download Service",10,"Print and download assistance"],
+["🔎","QR Scanner Service",10,"QR-related assistance"],
+["🏦","Banking Form Assistance",30,"Banking form assistance"],
+["📑","Other Online Service",40,"Other cyber centre service"]
+];
+let services=JSON.parse(localStorage.getItem("rcc_services")||"null")||DEFAULT.map((x,i)=>({id:i+1,icon:x[0],name:x[1],price:x[2],info:x[3]}));
+let users=JSON.parse(localStorage.getItem("rcc_users")||"[]"),requests=JSON.parse(localStorage.getItem("rcc_requests")||"[]"),recharges=JSON.parse(localStorage.getItem("rcc_recharge")||"[]");
+let current=null,selected=null;
+const save=()=>{localStorage.setItem("rcc_users",JSON.stringify(users));localStorage.setItem("rcc_requests",JSON.stringify(requests));localStorage.setItem("rcc_recharge",JSON.stringify(recharges));localStorage.setItem("rcc_services",JSON.stringify(services));};
+function tab(t){cb.classList.toggle("hidden",t!="c");ab.classList.toggle("hidden",t!="a");rb.classList.add("hidden");ct.classList.toggle("active",t=="c");at.classList.toggle("active",t=="a")}
+function showReg(){cb.classList.add("hidden");ab.classList.add("hidden");rb.classList.remove("hidden");ct.classList.remove("active");at.classList.remove("active")}
+function register(){let n=rn.value.trim(),m=rm.value.trim(),p=rp.value;if(!n||!/^\d{10}$/.test(m)||!p)return alert("Name, mobile, password ತುಂಬಿ.");if(users.some(u=>u.mobile==m))return alert("Mobile already registered.");users.push({name:n,mobile:m,password:p,wallet:0});save();alert("Registration successful.");tab("c")}
+function customerLogin(){let u=users.find(x=>x.mobile==cm.value.trim()&&x.password==cp.value);if(!u)return alert("Mobile ಅಥವಾ password ತಪ್ಪಾಗಿದೆ.");current={...u,admin:false};openApp()}
+function adminLogin(){if(am.value.trim()==ADMIN_MOBILE&&ap.value==ADMIN_PASSWORD){current={name:"Admin",mobile:ADMIN_MOBILE,admin:true};openApp()}else alert("Admin mobile ಅಥವಾ password ತಪ್ಪಾಗಿದೆ.")}
+function openApp(){login.classList.add("hidden");app.classList.remove("hidden");userBox.textContent=current.admin?"⚙️ Admin":"👤 "+current.name;welcome.textContent=current.admin?"Admin":"Hi "+current.name;mode.textContent=current.admin?"Admin":"Customer";customerArea.classList.toggle("hidden",current.admin);adminArea.classList.toggle("hidden",!current.admin);renderAll()}
+function logout(){current=null;app.classList.add("hidden");login.classList.remove("hidden");userBox.textContent="Login ಮಾಡಿ";tab("c")}
+function customer(){return users.find(u=>u.mobile==current?.mobile)}
+function renderAll(){if(current.admin){renderAdmin();return}let u=customer(),r=requests.filter(x=>x.mobile==u.mobile);bal.textContent="₹"+Number(u.wallet||0);wallet2.textContent=bal.textContent;reqCount.textContent=r.length;doneCount.textContent=r.filter(x=>x.status=="Completed").length;renderServices();renderHistory()}
+function renderServices(){let q=(search.value||"").toLowerCase();let list=services.filter(s=>s.name.toLowerCase().includes(q));servicesBox.innerHTML=list.map(s=>`<div class="card service"><div class="icon">${s.icon}</div><h3>${s.name}</h3><div class="price">Service Fee ₹${s.price}</div><div>${s.info}</div><button class="blue" onclick="apply(${s.id})">📤 Apply</button></div>`).join("")}
+function apply(id){selected=services.find(s=>s.id==id);let u=customer();if(!u||Number(u.wallet||0)<Number(selected.price))return alert("Wallet balance ಸಾಕಾಗುವುದಿಲ್ಲ. ಮೊದಲು Add Amount ಮಾಡಿ.");st.textContent=selected.icon+" "+selected.name;si.innerHTML=selected.info+"<br><b>Fee ₹"+selected.price+"</b><br>Request submit ಮಾಡಿದಾಗ amount cut ಆಗುವುದಿಲ್ಲ.";note.value="";serviceModal.classList.add("show")}
+function closeM(){serviceModal.classList.remove("show")}
+function submitRequest(){let u=customer();requests.push({id:Date.now(),mobile:u.mobile,name:u.name,service:selected.name,fee:selected.price,note:note.value,status:"Pending",created:new Date().toLocaleString(),charged:false});save();closeM();alert("Request submitted to Admin.");renderAll()}
+function openRecharge(){ra.value="";rechargeModal.classList.add("show")}function closeR(){rechargeModal.classList.remove("show")}
+function rechargeRequest(){let a=Number(ra.value),u=customer();if(!a||a<1)return alert("Valid amount ಹಾಕಿ.");recharges.push({id:Date.now(),mobile:u.mobile,name:u.name,amount:a,status:"Pending",created:new Date().toLocaleString()});save();closeR();alert("Recharge request submitted.");}
+function renderHistory(){let r=requests.filter(x=>x.mobile==current.mobile).reverse();history.innerHTML=r.length?`<table><tr><th>Service</th><th>Fee</th><th>Status</th></tr>${r.map(x=>`<tr><td>${x.service}</td><td>₹${x.fee}</td><td><span class="status">${x.status}${x.charged?" • Charged":""}</span></td></tr>`).join("")}</table>`:"No requests yet."}
+function renderAdmin(){recharges.innerHTML=rechargesData().slice().reverse().map(r=>`<div class="card"><b>${r.name}</b> • ${r.mobile}<br>₹${r.amount} • ${r.status}<br>${r.status=="Pending"?`<button class="green" onclick="approveR(${r.id})">Approve & Add</button> <button class="gray" onclick="rejectR(${r.id})">Reject</button>`:""}</div>`).join("")||"No recharge requests.";requestsBox=requests;requests.innerHTML=requestsBox.slice().reverse().map(r=>`<div class="card"><b>${r.name}</b> • ${r.mobile}<br><b>${r.service}</b> — ₹${r.fee}<br>Status: ${r.status}<br>${r.note||""}<br>${r.status=="Pending"?`<button class="green" onclick="complete(${r.id})">Complete & Charge</button> <button class="gray" onclick="reject(${r.id})">Reject</button>`:""}</div>`).join("")||"No customer requests.";settings.innerHTML=services.map(s=>`<div style="margin-bottom:8px"><b>${s.name}</b><input id="price_${s.id}" type="number" min="0" value="${s.price}"></div>`).join("")}
+function rechargesData(){return recharges}
+function approveR(id){let r=recharges.find(x=>x.id==id),u=users.find(x=>x.mobile==r.mobile);if(!r||!u)return;u.wallet=Number(u.wallet||0)+Number(r.amount);r.status="Approved";save();renderAdmin()}
+function rejectR(id){let r=recharges.find(x=>x.id==id);if(r){r.status="Rejected";save();renderAdmin()}}
+function complete(id){let r=requests.find(x=>x.id==id),u=users.find(x=>x.mobile==r.mobile);if(!r||!u)return;if(Number(u.wallet||0)<Number(r.fee))return alert("Customer wallet balance ಕಡಿಮೆ.");u.wallet=Number(u.wallet)-Number(r.fee);r.status="Completed";r.charged=true;save();renderAdmin()}
+function reject(id){let r=requests.find(x=>x.id==id);if(r){r.status="Rejected";save();renderAdmin()}}
+function savePrices(){services.forEach(s=>s.price=Number(document.getElementById("price_"+s.id).value)||0);save();alert("Prices saved.");renderAdmin()}
+
+/* Always show Login when the site is opened. */
+localStorage.removeItem("rcc_current");current=null;
+</script>
+</body></html>
