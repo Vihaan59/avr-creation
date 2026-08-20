@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="kn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raghu Cyber Centre Pro</title>
+<style>
+body{font-family:Arial;margin:0;background:#f3f7ff;color:#17233d}header{background:#075ca8;color:#fff;padding:16px}.wrap{max-width:1100px;margin:auto;padding:15px}
+.card{background:#fff;padding:16px;border-radius:14px;margin:12px 0;box-shadow:0 3px 14px #0001}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+button{padding:10px 14px;border:0;border-radius:8px;font-weight:bold;cursor:pointer}.blue{background:#087dd2;color:#fff}.green{background:#098765;color:#fff}.red{background:#d93025;color:#fff}.gray{background:#e8edf4}
+input,textarea{width:100%;padding:11px;margin:6px 0 10px;border:1px solid #ccd5e3;border-radius:8px;box-sizing:border-box}.hidden{display:none}.wallet{font-size:24px;font-weight:bold}
+@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:450px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><b>🟢 RAGHU CYBER CENTRE PRO</b><span id="userLabel" style="float:right">Login</span></div></header>
+<main class="wrap">
+<section id="login" class="card">
+<h2>Login</h2><button id="ct" class="blue">Customer</button> <button id="at" class="gray">Admin</button>
+<div id="customerBox"><input id="cm" placeholder="Mobile"><input id="cp" type="password" placeholder="Password"><button id="cl" class="blue">Login</button> <button id="regShow" class="gray">Register</button></div>
+<div id="adminBox" class="hidden"><input id="am" placeholder="Admin Mobile"><input id="ap" type="password" placeholder="Admin Password"><button id="al" class="blue">Admin Login</button></div>
+<div id="regBox" class="hidden"><input id="rn" placeholder="Name"><input id="rm" placeholder="Mobile"><input id="rp" type="password" placeholder="Password"><button id="reg" class="green">Register</button></div>
+</section>
+
+<section id="app" class="hidden">
+<div class="card"><h2 id="welcome"></h2><button id="logout" class="red">Logout</button></div>
+<div id="customerPanel">
+<div class="card"><h2>💰 Wallet</h2><div id="wallet" class="wallet">₹0</div><button id="add" class="green">Add Amount</button></div>
+<div class="card"><h2>📂 Services</h2><div id="services" class="grid"></div></div>
+<div class="card"><h2>📜 History</h2><div id="history"></div></div>
+</div>
+<div id="adminPanel" class="hidden">
+<div class="card"><h2>👥 Customer Control</h2><div id="customers"></div></div>
+<div class="card"><h2>⚙️ Service Prices</h2><div id="prices"></div><button id="savePrices" class="green">Save Prices</button></div>
+<div class="card"><h2>💳 Recharge Requests</h2><div id="recharges"></div></div>
+<div class="card"><h2>📋 Service Requests</h2><div id="requests"></div></div>
+</div>
+</section>
+</main>
+<script>
+const ADMIN="8310049524",PASS="1234";
+const defaults=["Ration Card PDF - OTP","Ration Card PDF - Without OTP","Gruha Lakshmi Apply","Caste Application","Income Application","Residence Certificate","Aadhaar / e-KYC Assistance","Mobile Number Service","Print / Download Service","QR Scanner Service","Banking Form Assistance","Other Online Service"];
+let d=JSON.parse(localStorage.getItem("rcc_final_data")||"null")||{users:[],requests:[],recharges:[],prices:defaults.map((n,i)=>({id:i+1,name:n,price:[20,25,30,30,30,30,30,20,10,10,30,40][i]}))};
+let cur=JSON.parse(localStorage.getItem("rcc_final_user")||"null"),selected=null;
+const $=x=>document.getElementById(x);
+function save(){localStorage.setItem("rcc_final_data",JSON.stringify(d));if(cur)localStorage.setItem("rcc_final_user",JSON.stringify(cur))}
+function show(t){$("customerBox").classList.toggle("hidden",t!="c");$("adminBox").classList.toggle("hidden",t!="a");$("regBox").classList.add("hidden")}
+function openApp(){ $("login").classList.add("hidden");$("app").classList.remove("hidden");$("welcome").textContent=cur.admin?"Admin":"Hi "+cur.name;$("userLabel").textContent=cur.admin?"Admin":"👤 "+cur.name;$("customerPanel").classList.toggle("hidden",cur.admin);$("adminPanel").classList.toggle("hidden",!cur.admin);render()}
+function render(){cur.admin?adminRender():customerRender()}
+function customer(){return d.users.find(u=>u.mobile==cur.mobile)}
+function customerRender(){let u=customer();$("wallet").textContent="₹"+u.wallet;$("services").innerHTML=d.prices.map(s=>`<div class="card"><h3>${s.name}</h3><b>₹${s.price}</b><br><button class="blue apply" data-id="${s.id}">Apply</button></div>`).join("");document.querySelectorAll(".apply").forEach(b=>b.onclick=()=>apply(+b.dataset.id));let r=d.requests.filter(x=>x.mobile==cur.mobile);$("history").innerHTML=r.map(x=>x.service+" — ₹"+x.fee+" — "+x.status+(x.refunded?" • Refunded":"")).join("<hr>")||"No requests"}
+function apply(id){selected=d.prices.find(x=>x.id==id);if(customer().wallet<selected.price)return alert("Wallet balance ಕಡಿಮೆ.");if(confirm(selected.name+" ₹"+selected.price+" Apply ಮಾಡಬೇಕಾ?")){d.requests.push({id:Date.now(),mobile:cur.mobile,name:cur.name,service:selected.name,fee:selected.price,status:"Pending",charged:false});save();render()}}
+function adminRender(){ $("customers").innerHTML=d.users.map(u=>`<div class="card"><b>${u.name}</b> • ${u.mobile}<br>Wallet: ₹${u.wallet} • ${u.active===false?"Deactivated":"Active"}<input id="take${u.mobile}" type="number" min="1" placeholder="Amount to take"><button class="red take" data-m="${u.mobile}">Take Balance</button> <button class="${u.active===false?"green":"red"} tog" data-m="${u.mobile}">${u.active===false?"Activate":"Deactivate"}</button></div>`).join("")||"No customers";document.querySelectorAll(".take").forEach(b=>b.onclick=()=>take(b.dataset.m));document.querySelectorAll(".tog").forEach(b=>b.onclick=()=>toggle(b.dataset.m));
+$("prices").innerHTML=d.prices.map(s=>`<label>${s.name}<input id="p${s.id}" type="number" min="0" value="${s.price}"></label>`).join("");
+$("recharges").innerHTML=d.recharges.map(r=>`<div class="card">${r.name} ₹${r.amount} — ${r.status} ${r.status=="Pending"?`<button class="green" onclick="approve(${r.id})">Approve</button>`:""}</div>`).join("")||"No recharge requests";
+$("requests").innerHTML=d.requests.map(r=>`<div class="card">${r.name} • ${r.service} ₹${r.fee} — ${r.status} ${r.status=="Pending"?`<button class="green" onclick="complete(${r.id})">Complete & Charge</button>`:""} ${r.status=="Completed"&&!r.refunded?`<button class="red" onclick="refund(${r.id})">Refund</button>`:""}</div>`).join("")||"No requests"}
+function take(m){let u=d.users.find(x=>x.mobile==m),a=Number($("take"+m).value);if(!a||a<=0)return alert("Amount ಹಾಕಿ.");if(a>u.wallet)return alert("Wallet balanceಗಿಂತ ಹೆಚ್ಚು.");u.wallet-=a;save();alert("₹"+a+" taken. New balance ₹"+u.wallet);adminRender()}
+function toggle(m){let u=d.users.find(x=>x.mobile==m);u.active=u.active===false;save();alert(u.active?"Activated":"Deactivated");adminRender()}
+function approve(id){let r=d.recharges.find(x=>x.id==id),u=d.users.find(x=>x.mobile==r.mobile);u.wallet+=r.amount;r.status="Approved";save();adminRender()}
+function complete(id){let r=d.requests.find(x=>x.id==id),u=d.users.find(x=>x.mobile==r.mobile);if(u.wallet<r.fee)return alert("Wallet balance ಕಡಿಮೆ.");u.wallet-=r.fee;r.status="Completed";r.charged=true;save();adminRender()}
+function refund(id){let r=d.requests.find(x=>x.id==id),u=d.users.find(x=>x.mobile==r.mobile);if(r.refunded)return;u.wallet+=r.fee;r.refunded=true;save();adminRender()}
+$("ct").onclick=()=>show("c");$("at").onclick=()=>show("a");$("regShow").onclick=()=>{$("customerBox").classList.add("hidden");$("regBox").classList.remove("hidden")};
+$("cl").onclick=()=>{let u=d.users.find(x=>x.mobile==$("cm").value.trim()&&x.password==$("cp").value);if(!u)return alert("Login failed");if(u.active===false)return alert("Customer deactivated");cur={name:u.name,mobile:u.mobile,admin:false};save();openApp()};
+$("al").onclick=()=>{if($("am").value.trim()==ADMIN&&$("ap").value==PASS){cur={name:"Admin",mobile:ADMIN,admin:true};save();openApp()}else alert("Admin login failed")};
+$("reg").onclick=()=>{let n=$("rn").value.trim(),m=$("rm").value.trim(),p=$("rp").value;if(!n||!/^\d{10}$/.test(m)||!p)return alert("Details fill ಮಾಡಿ");d.users.push({name:n,mobile:m,password:p,wallet:0,active:true});save();show("c")};
+$("logout").onclick=()=>{cur=null;localStorage.removeItem("rcc_final_user");$("app").classList.add("hidden");$("login").classList.remove("hidden");show("c")};
+$("add").onclick=()=>{let a=Number(prompt("Recharge amount ₹"));if(!a||a<1)return;d.recharges.push({id:Date.now(),mobile:cur.mobile,name:cur.name,amount:a,status:"Pending"});save();alert("Recharge request sent")};
+$("savePrices").onclick=()=>{d.prices.forEach(s=>s.price=Number($("p"+s.id).value)||0);save();alert("Prices saved");adminRender()};
+if(cur)openApp();else show("c");
+</script>
+</body>
+</html>
