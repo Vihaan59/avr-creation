@@ -1,9 +1,0 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Raghu Cyber Centre</title><link rel="stylesheet" href="style.css"></head><body>
-<header><div class="top"><b>🟢 RAGHU CYBER CENTRE</b><span>Print & Online Services</span></div></header>
-<div class="layout"><aside><button onclick="page('dashboard')">🏠 Dashboard</button><button onclick="page('print')">🖨️ Print Services</button><button onclick="page('wallet')">💰 Wallet</button><button onclick="page('orders')">📋 Orders</button></aside>
-<main><section id="dashboard" class="card"><h1>Dashboard</h1><div class="stats"><div>Wallet<strong id="w1">₹0</strong></div><div>Services<strong>10</strong></div><div>Orders<strong id="o1">0</strong></div></div><button class="primary" onclick="page('print')">Open Print Services</button></section>
-<section id="print" class="card hidden"><h1>🖨️ Print Services</h1><input id="search" oninput="render()" placeholder="Search service..."><div id="services" class="grid"></div></section>
-<section id="wallet" class="card hidden"><h1>💰 Wallet</h1><strong id="w2" class="big">₹0</strong><input id="amount" type="number" min="1" placeholder="Recharge amount"><button class="primary" onclick="recharge()">Request Recharge</button></section>
-<section id="orders" class="card hidden"><h1>📋 Orders</h1><div id="ordersBox"></div></section></main></div>
-<div id="modal" class="modal"><div class="box"><h2 id="mt"></h2><p id="mi"></p><input id="details" placeholder="Customer/order details"><button class="primary" onclick="submitOrder()">Submit Order</button><button onclick="closeM()">Cancel</button></div></div>
-<script src="script.js"></script></body></html>
