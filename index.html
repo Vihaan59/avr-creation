@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raghu Cyber Centre Pro</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#17233d}
+header{background:linear-gradient(135deg,#061b43,#087cc9);color:#fff;position:sticky;top:0;z-index:50}.head{max-width:1200px;margin:auto;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:21px;font-weight:800}.sub{font-size:12px;opacity:.9}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}.blue{background:#0785d7;color:#fff}.green{background:#12a84a;color:#fff}.red{background:#e53935;color:#fff}.gray{background:#e9edf3;color:#25334b}.orange{background:#ff9800;color:#fff}
+.container{max-width:1200px;margin:auto;padding:16px}.hidden{display:none!important}.card{background:#fff;border-radius:15px;padding:16px;margin-bottom:16px;box-shadow:0 4px 18px #16365b18}
+.login{max-width:430px;margin:35px auto}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{flex:1}.tab.active{background:#087dd2;color:#fff}.input,.select,.textarea{width:100%;padding:12px;border:1px solid #ccd5e1;border-radius:9px;margin:5px 0 12px;font-size:15px}.textarea{min-height:80px}
+.hero{background:linear-gradient(135deg,#fff,#eaf6ff)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:15px;border-radius:14px;background:#fff;box-shadow:0 4px 15px #173b6412}.stat b{font-size:23px}
+.search{width:100%;padding:12px;border:1px solid #ccd5e3;border-radius:10px;margin:5px 0 14px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.service{text-align:center;min-height:175px;display:flex;flex-direction:column;justify-content:space-between}.icon{font-size:38px}.service h3{font-size:15px;margin:8px 0}.price{font-weight:800;color:#087bc5}.desc{font-size:12px;color:#68758a}
+.category{color:#fff;padding:9px 12px;border-radius:9px;margin:15px 0 10px;font-weight:800}
+.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:10px;border-bottom:1px solid #e7ebf1;text-align:left;font-size:13px}th{background:#f3f6fa}.pill{display:inline-block;padding:4px 8px;border-radius:20px;font-size:11px;font-weight:700;background:#e8f5e9;color:#14843a}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.nav button{background:#fff;border:1px solid #dbe2eb}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:100;padding:15px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:16px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:18px}
+.footer{text-align:center;padding:25px;color:#6d7889;font-size:12px}
+.notice{background:#fff5d7;padding:11px;border-radius:10px;font-size:13px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.grid{grid-template-columns:1fr}.brand{font-size:18px}.stats{grid-template-columns:1fr 1fr}.container{padding:10px}}
+</style>
+</head>
+<body>
+<header><div class="head"><div><div class="brand">🟢 RAGHU CYBER CENTRE PRO</div><div class="sub">All Digital Services One Place</div></div><div id="topUser"></div></div></header>
+
+<main class="container">
+<section id="loginPage" class="login card">
+<h1>Login</h1>
+<div class="tabs"><button class="btn tab active">Customer</button><button class="btn gray" onclick="location.href='admin.html'">Admin</button></div>
+<label>Mobile Number</label><input id="loginMobile" class="input" inputmode="numeric" maxlength="10" placeholder="10 Digit Mobile">
+<label>Password</label><input id="loginPass" class="input" type="password" placeholder="Password">
+<button class="btn blue" style="width:100%" onclick="login()">Login</button>
+<p style="text-align:center">New customer? <button class="btn gray" onclick="showRegister()">Register</button></p>
+</section>
+
+<section id="registerPage" class="login card hidden">
+<h1>Customer Registration</h1>
+<input id="regName" class="input" placeholder="Full Name">
+<input id="regMobile" class="input" inputmode="numeric" maxlength="10" placeholder="10 Digit Mobile">
+<input id="regPass" class="input" type="password" placeholder="Password">
+<button class="btn green" style="width:100%" onclick="register()">Create Account</button>
+<button class="btn gray" style="width:100%;margin-top:8px" onclick="showLogin()">Back to Login</button>
+</section>
+
+<section id="appPage" class="hidden">
+<div class="nav">
+<button class="btn blue" onclick="dash()">Dashboard</button>
+<button class="btn" onclick="services()">Govt Services</button>
+<button class="btn" onclick="wallet()">Wallet</button>
+<button class="btn" onclick="historyPage()">Transactions</button>
+<button class="btn red" onclick="logout()">Logout</button>
+</div>
+
+<div id="dashboard">
+<div class="card hero"><h2 id="welcome"></h2><p>Services, wallet and application status ಒಂದೇ place ನಲ್ಲಿ.</p>
+<div class="notice">⚠️ This is a Cyber Centre management portal. Official government verification/OTP/payment must be completed only on the official portal.</div></div>
+<div class="stats">
+<div class="stat"><div>Wallet Balance</div><b id="bal">₹0</b></div>
+<div class="stat"><div>Total Services</div><b id="serviceCount">0</b></div>
+<div class="stat"><div>Requests</div><b id="reqCount">0</b></div>
+<div class="stat"><div>Completed</div><b id="doneCount">0</b></div>
+</div>
+<div class="card"><h2>🔥 Popular Services</h2><div id="dashServices" class="grid"></div></div>
+</div>
+
+<div id="servicePage" class="hidden"><div class="card"><h2>Govt / Cyber Services</h2><input id="search" class="search" oninput="renderServices()" placeholder="Search service..."><div id="serviceGrid"></div></div></div>
+
+<div id="walletPage" class="hidden"><div class="card"><h2>💰 Wallet</h2><h1 id="walletBal">₹0</h1><button class="btn green" onclick="openRecharge()">+ Add Money</button><p class="desc">Recharge request admin approve ಮಾಡಿದ ನಂತರ ಮಾತ್ರ balance add ಆಗುತ್ತದೆ.</p></div></div>
+
+<div id="historyPage" class="hidden"><div class="card"><h2>📑 Transaction / Request History</h2><div class="tablewrap" id="historyBox"></div></div></div>
+</section>
+</main>
+
+<div id="serviceModal" class="modal"><div class="modalbox"><h2 id="mTitle"></h2><p id="mInfo"></p><label>Applicant / Work Note</label><textarea id="mNote" class="textarea" placeholder="Optional details"></textarea><button class="btn green" onclick="submitRequest()">Submit Request</button> <button class="btn gray" onclick="closeModal()">Cancel</button></div></div>
+<div id="rechargeModal" class="modal"><div class="modalbox"><h2>💰 Add Money</h2><label>Amount</label><input id="rechargeAmount" class="input" type="number" min="1" placeholder="Enter amount"><button class="btn green" onclick="requestRecharge()">Send Recharge Request</button> <button class="btn gray" onclick="closeRecharge()">Cancel</button></div></div>
+<div class="footer">© 2026 Raghu Cyber Centre Pro • Customer Portal</div>
+
+<script>
+const KEY='rcc_full_v2';
+const ADMIN_URL='admin.html';
+const SERVICES=[
+['🏛️','Senior Citizen Apply','Government Services',100],
+['🌾','PM-Kisan','Government Services',100],
+['🟢','Yuva Nidhi','Government Services',75],
+['📦','E-Shram','Government Services',100],
+['📥','E-Shram Download','Government Services',50],
+['📜','Nadakacheri Download','Government Services',40],
+['✂️','Tailoring Certificate','Gruha Schemes',0],
+['🎂','Birth Certificate Karnataka Below 18','Gruha Schemes',0],
+['🎂','Birth Certificate Karnataka Above 18','Gruha Schemes',0],
+['🌸','Gruhalakshmi Status Instant','Gruha Schemes',20],
+['🪪','Ration to Aadhaar Number Manual','Gruha Schemes',0],
+['🔐','SSP Password Change','Gruha Schemes',30],
+['💻','Basic Computer Certificate','Gruha Schemes',0],
+['🏢','Udyam Registration','Gruha Schemes',99],
+['💡','Gruha Jyothi D-Link','Gruha Schemes',20],
+['🔗','Link Aadhaar & Pahani','Other Services',50],
+['🚜','Download RTC','Other Services',50],
+['🩺','ABHA Card','Other Services',100],
+['💊','Ayushman Card','Other Services',250],
+['📥','AYUSH Download','Other Services',250],
+['📄','Ration Card (AUTOMATED)','Print Services - Ration Card',5],
+['📄','Ration Card (WITHOUT OTP)','Print Services - Ration Card',5],
+['📄','Aadhaar to Ration PDF','Print Services - Ration Card',35],
+['📤','Upload Ration','Print Services - Ration Other',20],
+['🏪','Ration Shop & Member Details','Print Services - Ration Other',10],
+['📋','Anna Bhagya DBT Status','Print Services - Ration Other',10],
+['🔎','Correction Status','Print Services - Ration Other',10],
+['🗳️','EPIC Correction (Name)','Print Services - Voter',150],
+['🗳️','EPIC Correction (Photo)','Print Services - Voter',150],
+['🗳️','EPIC Correction (Gender)','Print Services - Voter',150],
+['🗳️','EPIC Correction (DOB)','Print Services - Voter',150],
+['🗳️','EPIC Correction (Address)','Print Services - Voter',150],
+['📄','Original Voter PDF','Print Services - Voter',50],
+['📱','Voter Instant Mobile Link','Print Services - Voter',35],
+['📱','Voter Mobile Link (Server 2)','Print Services - Voter',35],
+['📥','Voter Download Instant','Print Services - Voter',20],
+['🆔','EID to UID','Print Services - Aadhaar',1000],
+['📜','LMS Certificate','Print Services - Aadhaar',800],
+['📄','Aadhaar PDF','Print Services - Aadhaar',1000],
+['✅','Nesit RO Approval','Print Services - Aadhaar',1600],
+['📱','Mobile No. Update','Aadhaar Corrections',150],
+['🏠','Address Update','Aadhaar Corrections',300],
+['🎂','DOB Change','Aadhaar Corrections',1500],
+['🪪','Name Change','Aadhaar Corrections',1500],
+['🪪','Full Name Change','Aadhaar Corrections',5999],
+['👶','Child Enrollment','Aadhaar Corrections',1000],
+['👴','Voter Services','India Services',50],
+['🚗','Vehicle / RC Services','India Services',50],
+['🧾','PAN Service','India Services',50],
+['📱','Mobile Recharge Assistance','Other Services',10],
+['⚡','Electricity Bill Assistance','Other Services',10]
+];
+
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{users:[],requests:[],recharges:[]};
+let current=JSON.parse(localStorage.getItem('rcc_customer')||'null');
+let selected=null;
+
+function save(){localStorage.setItem(KEY,JSON.stringify(db));if(current)localStorage.setItem('rcc_customer',JSON.stringify(current))}
+function showLogin(){loginPage.classList.remove('hidden');registerPage.classList.add('hidden');appPage.classList.add('hidden');topUser.textContent=''}
+function showRegister(){loginPage.classList.add('hidden');registerPage.classList.remove('hidden')}
+function register(){let name=regName.value.trim(),mobile=regMobile.value.trim(),pass=regPass.value;if(!name||!/^\d{10}$/.test(mobile)||!pass)return alert('Name, 10 digit mobile and password fill madi.');if(db.users.some(x=>x.mobile===mobile))return alert('Mobile already registered.');db.users.push({name,mobile,password:pass,wallet:0,active:true});save();alert('Registration successful. Login madi.');showLogin()}
+function login(){let u=db.users.find(x=>x.mobile===loginMobile.value.trim()&&x.password===loginPass.value);if(!u)return alert('Login failed');if(u.active===false)return alert('Customer account deactivated by Admin.');current={mobile:u.mobile};save();loadApp()}
+function loadApp(){if(!current)return showLogin();let u=db.users.find(x=>x.mobile===current.mobile);if(!u||u.active===false){current=null;localStorage.removeItem('rcc_customer');return showLogin()}loginPage.classList.add('hidden');registerPage.classList.add('hidden');appPage.classList.remove('hidden');topUser.textContent='👤 '+u.name;dash()}
+function user(){return db.users.find(x=>x.mobile===current?.mobile)}
+function dash(){hideAll();dashboard.classList.remove('hidden');let u=user(), mine=db.requests.filter(r=>r.mobile===u.mobile);welcome.textContent='Hi '+u.name+' 👋';bal.textContent='₹'+Number(u.wallet||0).toFixed(2);serviceCount.textContent=SERVICES.length;reqCount.textContent=mine.length;doneCount.textContent=mine.filter(x=>x.status==='Completed').length;dashServices.innerHTML=SERVICES.slice(0,8).map(card).join('')}
+function services(){hideAll();servicePage.classList.remove('hidden');renderServices()}
+function wallet(){hideAll();walletPage.classList.remove('hidden');walletBal.textContent='₹'+Number(user().wallet||0).toFixed(2)}
+function historyPage(){hideAll();historyPageEl.classList.remove('hidden');renderHistory()}
+const historyPageEl=document.getElementById('historyPage');
+function hideAll(){dashboard.classList.add('hidden');servicePage.classList.add('hidden');walletPage.classList.add('hidden');historyPageEl.classList.add('hidden')}
+function card(s){return `<div class="card service"><div><div class="icon">${s[0]}</div><h3>${s[1]}</h3><div class="desc">${s[2]}</div></div><div class="price">₹${s[3]}</div><button class="btn blue" onclick="openService(${SERVICES.indexOf(s)})">Apply / Open</button></div>`}
+function renderServices(){let q=(search.value||'').toLowerCase();let f=SERVICES.filter(s=>(s[1]+' '+s[2]).toLowerCase().includes(q));let cats=[...new Set(f.map(s=>s[2]))];serviceGrid.innerHTML=cats.map(c=>`<div class="category" style="background:${['Gruha Schemes','Print Services - Ration Card'].includes(c)?'#ffb300':c.includes('Aadhaar')?'#e53935':'#0785d7'}">${c}</div><div class="grid">${f.filter(s=>s[2]===c).map(card).join('')}</div>`).join('')||'<p>No service found.</p>'}
+function openService(i){let s=SERVICES[i],u=user();if(s[3]>Number(u.wallet||0))return alert('Wallet balance ಸಾಕಾಗುವುದಿಲ್ಲ. ಮೊದಲು Add Money request madi.');selected=s;mTitle.textContent=s[0]+' '+s[1];mInfo.innerHTML=`Category: ${s[2]}<br><br><b>Service Price: ₹${s[3]}</b><br>Amount work complete ಆದಾಗ Admin deduct ಮಾಡುತ್ತಾರೆ.`;mNote.value='';serviceModal.classList.add('show')}
+function closeModal(){serviceModal.classList.remove('show')}
+function submitRequest(){let u=user();if(selected[3]>Number(u.wallet||0))return alert('Insufficient wallet balance.');db.requests.push({id:Date.now(),mobile:u.mobile,name:u.name,service:selected[1],category:selected[2],fee:selected[3],note:mNote.value.trim(),status:'Pending',charged:false,created:new Date().toLocaleString()});save();closeModal();alert('Request submitted to Admin.');historyPage()}
+function openRecharge(){rechargeAmount.value='';rechargeModal.classList.add('show')}
+function closeRecharge(){rechargeModal.classList.remove('show')}
+function requestRecharge(){let amount=Number(rechargeAmount.value),u=user();if(!amount||amount<1)return alert('Valid amount enter madi.');db.recharges.push({id:Date.now(),mobile:u.mobile,name:u.name,amount,status:'Pending',created:new Date().toLocaleString()});save();closeRecharge();alert('Recharge request Admin ge hogide. Approval aadmele wallet add agutte.')}
+function renderHistory(){let a=db.requests.filter(r=>r.mobile===current.mobile).reverse(),b=db.recharges.filter(r=>r.mobile===current.mobile).reverse();historyBox.innerHTML=`<h3>Service Requests</h3><table><tr><th>Service</th><th>Fee</th><th>Status</th><th>Date</th></tr>${a.map(r=>`<tr><td>${r.service}</td><td>₹${r.fee}</td><td><span class="pill">${r.status}${r.charged?' • Charged':''}</span></td><td>${r.created}</td></tr>`).join('')||'<tr><td colspan=4>No requests</td></tr>'}</table><h3>Wallet Requests</h3><table><tr><th>Amount</th><th>Status</th><th>Date</th></tr>${b.map(r=>`<tr><td>₹${r.amount}</td><td><span class="pill">${r.status}</span></td><td>${r.created}</td></tr>`).join('')||'<tr><td colspan=3>No recharge requests</td></tr>'}</table>`}
+function logout(){current=null;localStorage.removeItem('rcc_customer');showLogin()}
+window.addEventListener('storage',loadApp);loadApp();
+</script>
+</body></html>
