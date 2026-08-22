@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="kn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raghu Cyber Centre Pro</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Roboto,Arial;background:#f4f7fb;color:#263238}
+.top{height:65px;background:#fff;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;padding:0 20px;position:sticky;top:0;z-index:5}
+.brand{font-weight:800;color:#075985}.brand small{display:block;font-size:10px;color:#777}
+.layout{display:flex;min-height:calc(100vh - 65px)}.side{width:240px;background:linear-gradient(180deg,#075985,#c026d3);color:white;padding:12px}
+.side button{display:block;width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:11px;border-radius:7px}
+.side button:hover{background:#ffffff22}.side i{width:25px}.title{font-size:10px;opacity:.7;padding:16px 10px 5px}
+main{padding:20px;width:100%;max-width:1300px;margin:auto}.hero{background:linear-gradient(90deg,#075e54,#00a6d6);color:#fff;border-radius:12px;padding:22px}
+.stats,.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:15px 0}
+.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 5px 18px #0f172a12}.card h5{font-size:14px}.stat b{font-size:24px;display:block;margin-top:5px}.muted{color:#7b8794;font-size:12px}
+.service{text-align:center;border-top:3px solid #0ea5e9}.ico{width:55px;height:55px;border-radius:50%;background:#e8f5ff;display:flex;align-items:center;justify-content:center;margin:auto;font-size:25px;color:#0284c7}
+.price{font-weight:800;color:#0284c7;margin:8px}.service button{border:0;background:#0284c7;color:#fff;padding:7px 12px;border-radius:6px}
+.wallet{display:flex;justify-content:space-between;align-items:center}.wallet h1{color:#087f23}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#075985,#c026d3)}
+.loginbox{width:420px;background:#fff;padding:28px;border-radius:18px}.tabs{display:flex;gap:5px;margin:15px 0}.tabs button{flex:1;border:0;padding:10px;border-radius:7px}.tabs .active{background:#0284c7;color:#fff}
+@media(max-width:850px){.side{width:190px}.grid,.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.side{display:none}.grid,.stats{grid-template-columns:1fr}.brand{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="login" class="login"><div class="loginbox">
+<h3 class="text-center">🟢 RAGHU CYBER CENTRE PRO</h3><p class="text-center muted">Digital Services Portal</p>
+<div class="tabs"><button id="ct" class="active" onclick="tab(0)">Customer</button><button id="at" onclick="tab(1)">Admin</button></div>
+<div id="cl"><input id="cm" class="form-control mb-2" placeholder="Mobile Number"><input id="cp" type="password" class="form-control mb-2" placeholder="Password"><button class="btn btn-primary w-100" onclick="login()">Customer Login</button></div>
+<div id="al" style="display:none"><input id="am" class="form-control mb-2" value="8310049524"><input id="ap" type="password" class="form-control mb-2" placeholder="Admin Password"><button class="btn btn-dark w-100" onclick="admin()">Admin Login</button></div>
+</div></div>
+<div id="app" style="display:none">
+<header class="top"><div class="brand">🟢 RAGHU CYBER CENTRE PRO<small>All Digital Services One Place</small></div><div>💳 ₹<b id="topbal">0</b></div></header>
+<div class="layout"><aside class="side">
+<button onclick="show('home')"><i class="fa-solid fa-gauge"></i> Dashboard</button><button onclick="show('wallet')"><i class="fa-solid fa-wallet"></i> Wallet</button>
+<div class="title">SERVICES</div><button onclick="show('services')"><i class="fa-solid fa-building-columns"></i> Govt Services</button><button onclick="show('print')"><i class="fa-solid fa-print"></i> Print Services</button><button onclick="show('aadhaar')"><i class="fa-solid fa-fingerprint"></i> Aadhaar Corr.</button><button onclick="location.href='qr-scanner.html'"><i class="fa-solid fa-qrcode"></i> QR Scanner</button>
+<div class="title">STATEMENT</div><button onclick="show('history')"><i class="fa-solid fa-list"></i> Service History</button><div class="title">HELP</div><button onclick="show('pricing')"><i class="fa-solid fa-indian-rupee-sign"></i> Pricing</button><button onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+</aside><main>
+<section id="home"><div class="hero"><small>WELCOME TO</small><h2>RAGHU CYBER CENTRE PRO</h2><p>Government, print, Aadhaar and online services in one place.</p></div><div class="stats"><div class="card"><span class="muted">Wallet Balance</span><b>₹<span id="bal">0</span></b></div><div class="card"><span class="muted">Requests</span><b id="req">0</b></div><div class="card"><span class="muted">Completed</span><b id="done">0</b></div><div class="card"><span class="muted">Status</span><b style="color:#16a34a">ACTIVE</b></div></div><div class="card"><h4>Govt Services</h4><div id="homegrid" class="grid"></div></div></section>
+<section id="services" style="display:none"><h4>Govt Services</h4><div id="gov" class="grid"></div></section>
+<section id="print" style="display:none"><h4>Print Services</h4><div id="pr" class="grid"></div></section>
+<section id="aadhaar" style="display:none"><h4>Aadhaar Correction Services</h4><div id="ad" class="grid"></div></section>
+<section id="wallet" style="display:none"><div class="card wallet"><div><span class="muted">Wallet Balance</span><h1>₹<span id="wb">0</span></h1></div><button class="btn btn-success" onclick="topup()">+ Add Money</button></div><div class="card mt-3"><h4>Recharge Requests</h4><div id="trs"></div></div></section>
+<section id="history" style="display:none"><div class="card"><h4>Service History</h4><div id="his"></div></div></section>
+<section id="pricing" style="display:none"><div class="card"><h4>Service Pricing</h4><div id="prices"></div></div></section>
+</main></div></div>
+<script>
+const S=[['Govt','👴','Senior Citizen Apply',100],['Govt','🌾','PM-Kisan',100],['Govt','📱','Yuva Nidhi',75],['Govt','🪪','E-Shram',100],['Govt','📄','Nadakacheri Download',40],['Print','🧾','Ration Card PDF',5],['Print','🗳️','Voter Download',20],['Print','📑','Aadhaar to Ration PDF',35],['Aadhaar','📱','Mobile No. Update',150],['Aadhaar','🏠','Address Update',300],['Aadhaar','✏️','Name Change',1500]];
+let d=JSON.parse(localStorage.getItem('rcc')||'{"users":[],"topups":[],"requests":[],"current":null}');
+const save=()=>localStorage.setItem('rcc',JSON.stringify(d));
+function tab(a){cl.style.display=a?'none':'block';al.style.display=a?'block':'none';ct.className=a?'':'active';at.className=a?'active':''}
+function login(){let u=d.users.find(x=>x.m===cm.value&&x.p===cp.value);if(!u){alert('Login failed');return}d.current=u.m;save();start()}
+function admin(){if(am.value==='8310049524'&&ap.value==='1234'){location.href='admin.html'}else alert('Admin login failed')}
+function start(){login.style.display='none';app.style.display='block';render();show('home')}
+function show(id){['home','services','print','aadhaar','wallet','history','pricing'].forEach(x=>document.getElementById(x).style.display=x===id?'block':'none')}
+function card(s){return '<div class="card service"><div class="ico">'+s[1]+'</div><h5>'+s[2]+'</h5><div class="muted">'+s[0]+' Service</div><div class="price">₹'+s[3]+'</div><button onclick="apply('+S.indexOf(s)+')">Apply</button></div>'}
+function render(){let u=d.users.find(x=>x.m===d.current);let b=u?.w||0;topbal.textContent=bal.textContent=wb.textContent=b;let r=d.requests.filter(x=>x.m===d.current);req.textContent=r.length;done.textContent=r.filter(x=>x.status==='Completed').length;homegrid.innerHTML=S.slice(0,4).map(card).join('');gov.innerHTML=S.filter(x=>x[0]==='Govt').map(card).join('');pr.innerHTML=S.filter(x=>x[0]==='Print').map(card).join('');ad.innerHTML=S.filter(x=>x[0]==='Aadhaar').map(card).join('');prices.innerHTML=S.map(x=>'<div class="d-flex justify-content-between border-bottom py-2"><span>'+x[2]+'</span><b>₹'+x[3]+'</b></div>').join('');let t=d.topups.filter(x=>x.m===d.current).reverse();trs.innerHTML=t.length?t.map(x=>'<div class="border-bottom py-2">₹'+x.a+' — <b>'+x.status+'</b></div>').join(''):'No recharge requests';his.innerHTML=r.length?r.reverse().map(x=>'<div class="border-bottom py-2">'+x.s+' — ₹'+x.f+' — <b>'+x.status+'</b></div>').join(''):'No service requests'}
+function apply(i){let u=d.users.find(x=>x.m===d.current),s=S[i];if((u?.w||0)<s[3])return alert('Wallet balance insufficient');d.requests.push({m:u.m,s:s[2],f:s[3],status:'Pending',date:new Date().toLocaleString()});save();render();alert('Request submitted')}
+function topup(){let a=Number(prompt('Recharge amount ₹'));if(!a)return;let u=d.users.find(x=>x.m===d.current);d.topups.push({m:u.m,a:a,status:'Pending',date:new Date().toLocaleString()});save();render();alert('Recharge request sent to Admin')}
+function logout(){d.current=null;save();location.reload()}
+if(d.current)start();
+</script></body></html>
