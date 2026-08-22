@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="kn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raghu Cyber Centre Pro - Admin</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f7ff;color:#17233d}
+header{background:linear-gradient(135deg,#062f66,#0878c9);color:#fff;padding:15px}.head{max-width:1150px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-size:21px;font-weight:800}.container{max-width:1150px;margin:auto;padding:16px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:#fff;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 20px #173b6414}
+button{border:0;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer;margin:3px}.blue{background:#087dd2;color:#fff}.green{background:#0a8867;color:#fff}.red{background:#d93025;color:#fff}.gray{background:#e8edf5}
+input,select,textarea{width:100%;padding:11px;border:1px solid #ccd5e3;border-radius:9px;margin:5px 0 10px}label{font-weight:700;font-size:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hidden{display:none!important}
+.stat{font-size:25px;font-weight:800}.small{font-size:12px;color:#667085}.ok{color:#166534;background:#dcfce7;padding:5px 8px;border-radius:7px}.pending{color:#854d0e;background:#fff7d6;padding:5px 8px;border-radius:7px}.bad{color:#991b1b;background:#fee2e2;padding:5px 8px;border-radius:7px}
+table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #e4e8ef;text-align:left;vertical-align:top}.serviceRow{border:1px solid #e1e7ef;border-radius:12px;padding:12px;margin:8px 0}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><div class="head"><div><div class="brand">⚙️ RAGHU CYBER CENTRE PRO — ADMIN</div><div>Full Admin Control Panel</div></div><div><button class="gray" onclick="location.href='index.html'">Customer Site</button><button class="red" onclick="logoutAdmin()">Logout</button></div></div></header>
+<main class="container">
+<div id="adminLogin" class="card"><h2>🔐 Admin Login</h2><label>Admin Mobile</label><input id="am" inputmode="numeric" maxlength="10" placeholder="Admin mobile"><label>Password</label><input id="ap" type="password" placeholder="Admin password"><button class="blue" onclick="doLogin()">Login</button></div>
+<div id="panel" class="hidden">
+<div class="grid">
+<div class="card"><div>Customers</div><div class="stat" id="customerCount">0</div></div>
+<div class="card"><div>Pending Payments</div><div class="stat" id="paymentCount">0</div></div>
+<div class="card"><div>Pending Services</div><div class="stat" id="requestCount">0</div></div>
+<div class="card"><div>Active Services</div><div class="stat" id="serviceCount">0</div></div>
+</div>
+
+<div class="card"><h2>💳 Payment Verification — UTR</h2><p class="small">Customer QR payment ಮಾಡಿ UTR submit ಮಾಡಿದ ಮೇಲೆ ಇಲ್ಲಿ Confirm ಮಾಡಿದರೆ ಮಾತ್ರ wallet amount add ಆಗುತ್ತದೆ.</p><div id="payments"></div></div>
+
+<div class="card"><h2>📋 Customer Service Requests</h2><p class="small">Complete & Charge ಮಾಡಿದಾಗ service fee customer walletನಿಂದ deduct ಆಗುತ್ತದೆ. Refund ಮಾಡಿದರೆ amount walletಗೆ ಮರಳಿ add ಆಗುತ್ತದೆ.</p><div id="requests"></div></div>
+
+<div class="card"><h2>👥 Customer Wallet Control</h2><p class="small">Admin ಬೇಕಾದಷ್ಟು amount Add, Deduct ಅಥವಾ Refund ಮಾಡಬಹುದು.</p><div id="customers"></div></div>
+
+<div class="card"><h2>💰 Service Amount / Price Control</h2><p class="small">ಪ್ರತಿ service amount ಅನ್ನು Admin ಇಲ್ಲಿಂದ change ಮಾಡಬಹುದು; ಹೊಸ service ಕೂಡ add ಮಾಡಬಹುದು.</p><div id="services"></div>
+<h3>Add New Service</h3><div class="row"><input id="newIcon" placeholder="Icon e.g. 🧾"><input id="newName" placeholder="Service name"></div><div class="row"><input id="newPrice" type="number" min="0" placeholder="Amount ₹"><input id="newInfo" placeholder="Service description"></div><button class="green" onclick="addService()">+ Add Service</button></div>
+
+<div class="card"><h2>📒 Wallet Ledger</h2><div id="ledger"></div></div>
+</div></main>
+<script>
+const ADMIN_MOBILE="8310049524",ADMIN_PASSWORD="1234";
+let db=JSON.parse(localStorage.getItem("rcc_db_v2")||"null");
+if(!db)db={users:[],requests:[],recharges:[],services:[],ledger:[]};
+db.users=Array.isArray(db.users)?db.users:[];db.requests=Array.isArray(db.requests)?db.requests:[];db.recharges=Array.isArray(db.recharges)?db.recharges:[];db.services=Array.isArray(db.services)?db.services:[];db.ledger=Array.isArray(db.ledger)?db.ledger:[];
+function save(){localStorage.setItem("rcc_db_v2",JSON.stringify(db))}
+function authed(){return localStorage.getItem("rcc_admin_v2")==="1"}
+function doLogin(){if(am.value.trim()!==ADMIN_MOBILE||ap.value!==ADMIN_PASSWORD)return alert("Admin login failed.");localStorage.setItem("rcc_admin_v2","1");render()}
+function logoutAdmin(){localStorage.removeItem("rcc_admin_v2");location.reload()}
+function money(n){return "₹"+Number(n||0).toFixed(2)}
+function render(){if(!authed()){adminLogin.classList.remove("hidden");panel.classList.add("hidden");return}adminLogin.classList.add("hidden");panel.classList.remove("hidden");customerCount.textContent=db.users.length;paymentCount.textContent=db.recharges.filter(x=>x.status==="Pending").length;requestCount.textContent=db.requests.filter(x=>x.status==="Pending").length;serviceCount.textContent=db.services.filter(x=>x.active).length;renderPayments();renderRequests();renderCustomers();renderServices();renderLedger()}
+function renderPayments(){let p=db.recharges.slice().reverse();payments.innerHTML=p.length?p.map(x=>`<div class="serviceRow"><b>${x.name}</b> • ${x.mobile}<br>Amount: <b>${money(x.amount)}</b> • UTR: <b>${x.utr}</b><br><span class="small">${x.created}</span><br>Status: <span class="${x.status==="Confirmed"?"ok":x.status==="Rejected"?"bad":"pending"}">${x.status}</span><br>${x.status==="Pending"?`<button class="green" onclick="confirmPayment(${x.id})">✅ Confirm Payment</button><button class="red" onclick="rejectPayment(${x.id})">Reject</button>`:""}</div>`).join(""):"No payment requests."}
+function confirmPayment(id){let p=db.recharges.find(x=>x.id===id);if(!p||p.status!=="Pending")return;let u=db.users.find(x=>x.mobile===p.mobile);if(!u)return alert("Customer not found.");u.wallet=Number(u.wallet||0)+Number(p.amount);p.status="Confirmed";p.confirmed=new Date().toLocaleString();db.ledger.push({date:p.confirmed,mobile:u.mobile,name:u.name,type:"Payment Confirm",amount:Number(p.amount),note:"UTR "+p.utr});save();alert("Payment confirmed. "+money(p.amount)+" customer walletಗೆ added.");render()}
+function rejectPayment(id){let p=db.recharges.find(x=>x.id===id);if(!p)return;p.status="Rejected";p.rejected=new Date().toLocaleString();save();render()}
+function renderRequests(){let r=db.requests.slice().reverse();requests.innerHTML=r.length?r.map(x=>`<div class="serviceRow"><b>${x.name}</b> • ${x.mobile}<br><b>${x.service}</b> • Fee ${money(x.fee)}<br>Note: ${x.note||"—"}<br><span class="small">${x.created}</span><br>Status: <span class="${x.status==="Completed"?"ok":x.status==="Rejected"?"bad":"pending"}">${x.status}${x.charged?" • Charged":""}</span><br>${x.status==="Pending"?`<button class="green" onclick="completeRequest(${x.id})">✅ Complete & Charge</button><button class="red" onclick="rejectRequest(${x.id})">Reject</button>`:""} ${x.charged?`<button onclick="refundRequest(${x.id})">↩️ Refund Fee</button>`:""}</div>`).join(""):"No service requests."}
+function completeRequest(id){let r=db.requests.find(x=>x.id===id);if(!r||r.status!=="Pending")return;let u=db.users.find(x=>x.mobile===r.mobile);if(!u)return;let fee=Number(r.fee);if(Number(u.wallet||0)<fee)return alert("Customer wallet "+money(u.wallet)+" ಮಾತ್ರ ಇದೆ. Fee "+money(fee)+" ಇದೆ.");u.wallet-=fee;r.status="Completed";r.charged=true;r.completed=new Date().toLocaleString();db.ledger.push({date:r.completed,mobile:u.mobile,name:u.name,type:"Service Charge",amount:-fee,note:r.service});save();render()}
+function refundRequest(id){let r=db.requests.find(x=>x.id===id);if(!r||!r.charged)return;let u=db.users.find(x=>x.mobile===r.mobile);if(!u)return;u.wallet=Number(u.wallet||0)+Number(r.fee);r.charged=false;r.refunded=true;r.refundedAt=new Date().toLocaleString();db.ledger.push({date:r.refundedAt,mobile:u.mobile,name:u.name,type:"Service Refund",amount:Number(r.fee),note:r.service});save();alert("Refund completed. "+money(r.fee)+" walletಗೆ ಮರಳಿ added.");render()}
+function rejectRequest(id){let r=db.requests.find(x=>x.id===id);if(!r)return;r.status="Rejected";save();render()}
+function renderCustomers(){customers.innerHTML=db.users.length?db.users.map(u=>`<div class="serviceRow"><b>${u.name}</b> • ${u.mobile}<br>Wallet: <b>${money(u.wallet)}</b> • ${u.active===false?"Deactivated":"Active"}<br><input id="amt_${u.mobile}" type="number" min="0" placeholder="Amount ₹"><button class="green" onclick="adjustWallet('${u.mobile}',1)">+ Add</button><button class="red" onclick="adjustWallet('${u.mobile}',-1)">− Deduct</button><button onclick="setWallet('${u.mobile}')">Set Balance</button><button onclick="toggleUser('${u.mobile}')">${u.active===false?"Activate":"Deactivate"}</button></div>`).join(""):"No customers."}
+function getAmt(m){let n=Number(document.getElementById("amt_"+m)?.value);if(!n||n<0){alert("Valid amount ಹಾಕಿ.");return null}return n}
+function adjustWallet(m,sign){let a=getAmt(m);if(a===null)return;let u=db.users.find(x=>x.mobile===m);if(!u)return;if(sign<0&&Number(u.wallet||0)<a)return alert("Wallet balance ಕಡಿಮೆ ಇದೆ.");u.wallet=Number(u.wallet||0)+sign*a;let d=new Date().toLocaleString();db.ledger.push({date:d,mobile:u.mobile,name:u.name,type:sign>0?"Admin Add":"Admin Deduct",amount:sign*a,note:"Admin wallet control"});save();render()}
+function setWallet(m){let a=getAmt(m);if(a===null)return;let u=db.users.find(x=>x.mobile===m);if(!u)return;let old=Number(u.wallet||0);u.wallet=a;let d=new Date().toLocaleString();db.ledger.push({date:d,mobile:u.mobile,name:u.name,type:"Set Balance",amount:a-old,note:"Admin set balance"});save();render()}
+function toggleUser(m){let u=db.users.find(x=>x.mobile===m);if(!u)return;u.active=u.active===false;save();render()}
+function renderServices(){services.innerHTML=db.services.length?db.services.map(s=>`<div class="serviceRow"><div class="row"><div><b>${s.icon} ${s.name}</b></div><div><label>Amount ₹</label><input id="sp_${s.id}" type="number" min="0" value="${Number(s.price)}"></div></div><label>Description</label><input id="si_${s.id}" value="${s.info||""}"><button class="green" onclick="saveService(${s.id})">Save Amount / Service</button><button onclick="toggleService(${s.id})">${s.active?"Hide Service":"Show Service"}</button><button class="red" onclick="deleteService(${s.id})">Delete</button></div>`).join(""):"No services."}
+function saveService(id){let s=db.services.find(x=>x.id===id);if(!s)return;let p=Number(document.getElementById("sp_"+id).value);if(p<0||!Number.isFinite(p))return alert("Valid amount.");s.price=p;s.info=document.getElementById("si_"+id).value.trim();save();render()}
+function toggleService(id){let s=db.services.find(x=>x.id===id);if(!s)return;s.active=!s.active;save();render()}
+function deleteService(id){if(!confirm("Delete this service?"))return;db.services=db.services.filter(x=>x.id!==id);save();render()}
+function addService(){let icon=newIcon.value.trim()||"📌",name=newName.value.trim(),price=Number(newPrice.value),info=newInfo.value.trim();if(!name||price<0)return alert("Service name ಮತ್ತು valid amount ಬೇಕು.");db.services.push({id:Date.now(),icon,name,price,info,active:true});newIcon.value="";newName.value="";newPrice.value="";newInfo.value="";save();render()}
+function renderLedger(){let a=db.ledger.slice().reverse();ledger.innerHTML=a.length?'<table><tr><th>Date</th><th>Customer</th><th>Type</th><th>Amount</th><th>Note</th></tr>'+a.map(x=>`<tr><td>${x.date}</td><td>${x.name}<br>${x.mobile}</td><td>${x.type}</td><td>${money(x.amount)}</td><td>${x.note||""}</td></tr>`).join("")+"</table>":"No wallet transactions yet."}
+render();
+</script>
+</body></html>
