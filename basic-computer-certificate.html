@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Basic Computer Certificate - Raghu Cyber Centre Pro</title>
+<link rel="stylesheet" href="./styles.css">
+<style>
+.form-title{color:#0b6fb3;margin:4px 0 10px;border-bottom:1px solid #e7ebf0;padding-bottom:6px}
+.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.full{grid-column:1/-1}.input-group{display:flex;align-items:stretch}.input-group span{display:flex;align-items:center;padding:0 11px;border:1px solid #d5dce5;border-right:0;border-radius:7px 0 0 7px;background:#fff}.input-group input,.input-group select,.input-group textarea{border-radius:0 7px 7px 0;margin:0}.field label{margin-top:0}.note{color:#b42318;font-weight:700;margin-top:18px;overflow:hidden;white-space:nowrap}
+@media(max-width:850px){.form-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.container{padding:0 10px}}
+</style>
+</head>
+<body data-page="bcc">
+<div data-header></div>
+<main class="container">
+<section class="card">
+<h1>💻 Basic Computer Certificate</h1>
+<p class="muted">Basic Computer Certificate - Offline Application</p>
+<form id="bccForm" enctype="multipart/form-data">
+<h3 class="form-title">Student Information</h3>
+<div class="form-grid">
+<div class="field"><label for="student_name">Student Name <span class="text-danger">*</span></label><div class="input-group"><span>👤</span><input id="student_name" name="student_name" placeholder="Student Name" maxlength="150" required></div></div>
+<div class="field"><label for="father_name">Father Name *</label><div class="input-group"><span>👨‍👦</span><input id="father_name" name="father_name" placeholder="Father Name" maxlength="150" required></div></div>
+<div class="field"><label for="mother_name">Mother Name *</label><div class="input-group"><span>👩‍👦</span><input id="mother_name" name="mother_name" placeholder="Mother Name" maxlength="150" required></div></div>
+<div class="field"><label for="dob">Date of Birth *</label><div class="input-group"><span>📅</span><input type="date" id="dob" name="dob" required></div></div>
+<div class="field"><label for="gender">Gender *</label><div class="input-group"><span>⚥</span><select id="gender" name="gender" required><option value="">--Select Gender--</option><option>Male</option><option>Female</option><option>Other</option></select></div></div>
+<div class="field"><label for="qualification">Qualification *</label><div class="input-group"><span>🎓</span><input id="qualification" name="qualification" placeholder="Qualification" maxlength="150" required></div></div>
+<div class="field"><label for="cast_category">Cast Category *</label><div class="input-group"><span>📋</span><select id="cast_category" name="cast_category" required><option value="">--Select Category--</option><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>Other</option></select></div></div>
+</div>
+<h3 class="form-title">Address Information</h3>
+<div class="form-grid">
+<div class="field"><label for="state">State *</label><div class="input-group"><span>🗺️</span><input id="state" name="state" placeholder="State" maxlength="100" required></div></div>
+<div class="field"><label for="district">District *</label><div class="input-group"><span>📍</span><input id="district" name="district" placeholder="District" maxlength="100" required></div></div>
+<div class="field"><label for="pin_code">Pin Code *</label><div class="input-group"><span>#</span><input id="pin_code" name="pin_code" inputmode="numeric" maxlength="6" placeholder="Pin Code" required></div></div>
+<div class="field full"><label for="full_address">Full Address *</label><div class="input-group"><span>📌</span><textarea id="full_address" name="full_address" rows="2" placeholder="Full Address" maxlength="500" required></textarea></div></div>
+</div>
+<h3 class="form-title">Contact Information</h3>
+<div class="form-grid">
+<div class="field"><label for="mobile_number">Mobile Number *</label><div class="input-group"><span>📱</span><input id="mobile_number" name="mobile_number" inputmode="numeric" maxlength="10" placeholder="10 Digit Mobile" required></div></div>
+<div class="field"><label for="email_id">Email ID *</label><div class="input-group"><span>✉️</span><input type="email" id="email_id" name="email_id" placeholder="Email ID" required></div></div>
+</div>
+<h3 class="form-title">Document Upload</h3>
+<div class="form-grid">
+<div class="field"><label for="passport_photo">Passport Size Photo *</label><div class="input-group"><span>🖼️</span><input type="file" id="passport_photo" name="passport_photo" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required></div><div class="small">JPG, JPEG, PNG up to 1MB</div></div>
+</div>
+<div class="actions" style="margin-top:20px"><button type="submit" class="btn" id="verify">SUBMIT</button></div>
+<center><span style="color:#0b6fb3">💵 Payable Amt: <b>₹50/-</b></span></center>
+<div id="bccMsg" class="small" style="margin-top:12px"></div>
+<div class="note">ಗಮನಿಸಿ.. ಇದು OFFLINE APPLICATION ಆಗಿದ್ದು, Working Hours ನ ಕೇವಲ 2 ಗಂಟೆಗಳ ಒಳಗಾಗಿ ಅಪ್ಲಿಕೇಶನ್ ಪ್ರೋಸೆಸ್ ಮಾಡಲಾಗುತ್ತದೆ.</div>
+</form>
+</section>
+</main>
+<footer>© 2026 Raghu Cyber Centre Pro</footer>
+<script src="./app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const form=document.getElementById('bccForm');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    if(typeof need==='function' && !need()) return;
+    const pin=document.getElementById('pin_code').value.trim(), mob=document.getElementById('mobile_number').value.trim();
+    if(!/^\d{6}$/.test(pin)) return alert('6 digit Pin Code ಹಾಕಿ.');
+    if(!/^\d{10}$/.test(mob)) return alert('10 digit Mobile Number ಹಾಕಿ.');
+    const photo=document.getElementById('passport_photo').files[0];
+    if(!photo) return alert('Passport Size Photo upload ಮಾಡಿ.');
+    if(photo.size>1024*1024) return alert('Photo 1MB ಒಳಗಿರಬೇಕು.');
+    const u=user();
+    const data={student_name:student_name.value.trim(),father_name:father_name.value.trim(),mother_name:mother_name.value.trim(),dob:dob.value,gender:gender.value,qualification:qualification.value.trim(),cast_category:cast_category.value,state:state.value.trim(),district:district.value.trim(),pin_code:pin,full_address:full_address.value.trim(),mobile_number:mob,email_id:email_id.value.trim(),photo_name:photo.name};
+    db.requests.push({id:Date.now()+Math.random(),mobile:u.mobile,name:u.name,service:'Basic Computer Certificate',fee:50,note:JSON.stringify(data),status:'Pending',charged:false,created:now()});
+    save();
+    form.reset();
+    document.getElementById('bccMsg').innerHTML='<span class="badge pending">Application submitted successfully. Admin will process it.</span>';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+</script>
+</body></html>
