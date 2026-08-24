@@ -1,17 +1,1 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Login - Raghu Cyber Centre Pro</title><link rel="stylesheet" href="./raghu-fixed.css"></head>
-<body><main class="container" style="max-width:480px;margin-top:50px">
-<div class="card"><h2>🔐 Raghu Cyber Centre Pro</h2><p>Login</p>
-<form id="loginForm"><label>Email</label><input id="email" type="email" required placeholder="Enter email">
-<label>Password</label><input id="password" type="password" required placeholder="Enter password">
-<button class="btn" type="submit">Login</button></form>
-<p id="msg"></p><a href="./index.html">← Back to Dashboard</a></div></main>
-<script>
-document.getElementById("loginForm").addEventListener("submit",e=>{
- e.preventDefault();
- localStorage.setItem("raghu_logged_in","1");
- document.getElementById("msg").textContent="Login details accepted. Opening dashboard...";
- setTimeout(()=>location.href="./index.html",400);
-});
-</script></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login - Raghu Cyber Centre Pro</title><link rel="stylesheet" href="./styles.css"></head><body data-page="login"><div data-header></div><main class="container"><div class="center"><section class="card"><h2>🔐 Customer Login</h2><form id="loginForm"><label>Mobile Number</label><input id="lm" inputmode="numeric" maxlength="10" required placeholder="10 digit mobile"><label>Password</label><input id="lp" type="password" required><button class="btn" type="submit">Customer Login</button></form></section><section class="card"><h2>🆕 Create Customer Account</h2><form id="registerForm"><label>Full Name</label><input id="rn" required><label>Mobile Number</label><input id="rm" inputmode="numeric" maxlength="10" required><label>Password</label><input id="rp" type="password" required><button class="btn green" type="submit">Create Account</button></form></section><section class="card"><a class="btn dark" href="./admin.html">⚙️ Admin Login</a></section></div></main><footer>© 2026 Raghu Cyber Centre Pro</footer><script src="./app.js"></script></body></html>

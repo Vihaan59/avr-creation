@@ -1,14 +1,12 @@
-# Raghu Cyber Centre Pro
+# Raghu Cyber Centre Pro — Ready Build
 
-This project keeps the uploaded dashboard as the visual base and adds matching customer pages.
+This build fixes the broken `assets/css/...` paths and makes the pages work together on GitHub Pages.
 
-## Pages
-index.html, login.html, wallet.html, profile.html, print-services.html, govt-services.html,
-aadhaar-services.html, wallet-history.html, transaction-history.html, pricing.html, faq.html,
-support.html, admin.html
+Customer accounts, wallet, requests and admin controls use browser localStorage in this static build.
 
-## Supabase
-Put your Supabase project URL and anon/public key in `assets/js/config.js`.
-Do not put a service_role key in browser code.
+Admin login from the uploaded project:
+- Email: raghunaikskp9686@gmail.com
+- Mobile: 8310049524
+- Password: 1234
 
-The uploaded original dashboard already references its own `assets/` tree. Keep that original assets tree beside `index.html` when deploying if you want the original dashboard's exact CSS/plugins/images.
+This is a client-side prototype; localStorage authentication is not production-grade security.
