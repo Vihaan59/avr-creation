@@ -1,23 +1,32 @@
-
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#172033}
 body{min-height:100vh}
 a{color:inherit;text-decoration:none}
-img{max-width:100%}
+img{max-width:100%;height:auto}
 .site-header{background:linear-gradient(90deg,#7b0b86,#008fd1);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10}
 .brand{font-weight:700;font-size:18px;flex:1}
 .nav{display:flex;gap:7px;flex-wrap:wrap}
-.nav a{background:#fff;color:#125080;padding:7px 11px;border-radius:6px;font-size:13px}
+.nav a{background:#fff;color:#125080;padding:7px 11px;border-radius:6px;font-size:13px;display:inline-block}
 .nav a:hover{background:#eaf7ff}
 .container{max-width:1400px;margin:18px auto;padding:0 16px}
 .card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 12px #00000012;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
 .service-card{background:#fff;border-radius:10px;padding:18px;text-align:center;box-shadow:0 2px 10px #00000012}
 .btn{display:inline-block;background:#008fd1;color:#fff;border:0;border-radius:6px;padding:9px 14px;cursor:pointer}
-.btn.green{background:#18a81a}.btn.red{background:#e52b35}.btn.dark{background:#24354a}
+.btn:hover{opacity:.9}
+.btn.green{background:#18a81a}
+.btn.red{background:#e52b35}
+.btn.dark{background:#24354a}
 input,select,textarea{width:100%;padding:11px;border:1px solid #d5dce5;border-radius:7px;margin:5px 0 12px}
+button{font-family:inherit}
 table{width:100%;border-collapse:collapse;background:#fff}
 th,td{padding:10px;border-bottom:1px solid #e7ebf0;text-align:left}
 .badge{display:inline-block;padding:4px 8px;border-radius:12px;background:#e7f8eb;color:#16852a;font-size:12px}
 footer{text-align:center;padding:22px;color:#718096}
-@media(max-width:700px){.site-header{align-items:flex-start;flex-direction:column}.nav{width:100%}.nav a{font-size:12px}.container{padding:0 10px}}
+@media(max-width:700px){
+  .site-header{align-items:flex-start;flex-direction:column}
+  .nav{width:100%}
+  .nav a{font-size:12px}
+  .container{padding:0 10px}
+  .grid{grid-template-columns:1fr}
+}
